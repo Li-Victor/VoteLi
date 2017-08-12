@@ -1,6 +1,7 @@
 var express = require('express');
 var passport = require('passport');
-var Strategy = require('passport-local').Strategy;
+var localStrategy = require('passport-local').Strategy;
+var facebookStrategy = require('passport-facebook').Strategy;
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
@@ -9,7 +10,7 @@ var ensureLogin = require('connect-ensure-login');
 var dbUsers = require('./db/users');
 var secret = require('./secret');
 
-passport.use(new Strategy(
+passport.use(new localStrategy(
     function (username, password, cb) {
         dbUsers.findByUsername(username, function (err, userObj) {
             if(err) { return cb(err); }
@@ -45,7 +46,6 @@ app.use(session({
     }
 }));
 
-//Initialize Passport and restore authentication state, if any, from any session
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -57,7 +57,9 @@ app.get('/', function (req, res) {
 });
 
 app.get('/login', function (req, res) {
-    res.render('login');
+    //redirect ot homepage when already logged in
+    if(req.user) { return res.redirect('/'); }
+    else return res.render('login');
 });
 
 app.post('/login', passport.authenticate('local', { failureRedirect: '/login'}), function (req, res) {
@@ -69,8 +71,8 @@ app.get('/logout', function (req, res) {
     res.redirect('/');
 });
 
-app.get('/polls', ensureLogin.ensureLoggedIn(), function (req, res) {
-    res.render('polls', {user: req.user});
+app.get('/mypolls', ensureLogin.ensureLoggedIn(), function (req, res) {
+    res.render('mypolls', {user: req.user});
 });
 
 app.listen(3000, function () {

@@ -1,9 +1,9 @@
-<h1>Lets-Vote</h1>
+<h1><a href="/">Lets-Vote</a></h1>
 <% if (!user) { %>
 	<p>To make a poll, <a href="/login">log in</a>.</p>
 <% } else { %>
 	<p><%= user.username %></p>
 
-    <p><a href="/polls">my polls</a></p>
+    <p><a href="/mypolls">my polls</a></p>
     <p><a href="/logout">Log out</a></p>
 <% } %>
