@@ -21,6 +21,17 @@ passport.use(new localStrategy(
     }
 ));
 
+passport.use(new facebookStrategy({
+    clientID: secret.FB_CLIENT_ID,
+    clientSecret: secret.FB_CLIENT_SECRET,
+    callbackURL: 'http://localhost:3000/login/facebook/return',
+    profileFields: ['id', 'displayName', 'email']
+}, function (accessToken, refreshToken, profile, cb) {
+
+    return cb(null, profile);
+
+}))
+
 passport.serializeUser(function (user, cb) {
     cb(null, user.id);
 });
@@ -56,6 +67,7 @@ app.get('/', function (req, res) {
     res.render('home', {user: req.user});
 });
 
+//Passport-Local Login
 app.get('/login', function (req, res) {
     //redirect ot homepage when already logged in
     if(req.user) { return res.redirect('/'); }
@@ -63,6 +75,15 @@ app.get('/login', function (req, res) {
 });
 
 app.post('/login', passport.authenticate('local', { failureRedirect: '/login'}), function (req, res) {
+    res.redirect('/');
+});
+
+//passport-Facebook login
+app.get('/login/facebook', passport.authenticate('facebook', {authType: 'rerequest', scope: ['email'] }));
+
+app.get('/login/facebook/return', passport.authenticate('facebook', {
+    failureRedirect: '/login'
+}), function (req, res) {
     res.redirect('/');
 });
 
