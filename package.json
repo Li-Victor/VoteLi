@@ -1,0 +1,30 @@
+{
+  "name": "lets-vote",
+  "version": "1.0.0",
+  "description": "A voting app in which each poll is graphed",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Li-Victor/lets-vote.git"
+  },
+  "author": "Victor Li",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Li-Victor/lets-vote/issues"
+  },
+  "homepage": "https://github.com/Li-Victor/lets-vote#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "connect-ensure-login": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.7",
+    "express": "^4.15.4",
+    "express-session": "^1.15.5",
+    "passport": "^0.4.0",
+    "passport-facebook": "^2.1.1",
+    "passport-local": "^1.0.0"
+  }
+}
