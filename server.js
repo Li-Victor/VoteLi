@@ -67,25 +67,28 @@ app.get('/', function (req, res) {
     res.render('home', {user: req.user});
 });
 
-//Passport-Local Login
-app.get('/login', function (req, res) {
+
+app.get('/signup', function (req, res) {
     //redirect ot homepage when already logged in
     if(req.user) { return res.redirect('/'); }
-    else return res.render('login');
+    else return res.render('signup');
 });
 
-app.post('/login', passport.authenticate('local', { failureRedirect: '/login'}), function (req, res) {
+
+//Passport-Local Login
+app.post('/login', passport.authenticate('local', { failureRedirect: '/login'} ), function (req, res) {
     res.redirect('/');
 });
 
 //passport-Facebook login
-app.get('/login/facebook', passport.authenticate('facebook', {authType: 'rerequest', scope: ['email'] }));
+app.get('/login/facebook', passport.authenticate('facebook', {authType: 'rerequest', scope: ['email'] } ));
 
 app.get('/login/facebook/return', passport.authenticate('facebook', {
     failureRedirect: '/login'
 }), function (req, res) {
     res.redirect('/');
 });
+
 
 app.get('/logout', function (req, res) {
     req.logout();
