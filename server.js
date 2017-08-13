@@ -68,15 +68,8 @@ app.get('/', function (req, res) {
 });
 
 
-app.get('/signup', function (req, res) {
-    //redirect ot homepage when already logged in
-    if(req.user) { return res.redirect('/'); }
-    else return res.render('signup');
-});
-
-
 //Passport-Local Login
-app.post('/login', passport.authenticate('local', { failureRedirect: '/login'} ), function (req, res) {
+app.post('/login', passport.authenticate('local', { failureRedirect: '/'} ), function (req, res) {
     res.redirect('/');
 });
 
@@ -84,7 +77,7 @@ app.post('/login', passport.authenticate('local', { failureRedirect: '/login'} )
 app.get('/login/facebook', passport.authenticate('facebook', {authType: 'rerequest', scope: ['email'] } ));
 
 app.get('/login/facebook/return', passport.authenticate('facebook', {
-    failureRedirect: '/login'
+    failureRedirect: '/'
 }), function (req, res) {
     res.redirect('/');
 });
@@ -95,9 +88,14 @@ app.get('/logout', function (req, res) {
     res.redirect('/');
 });
 
-app.get('/mypolls', ensureLogin.ensureLoggedIn(), function (req, res) {
+app.get('/mypolls', ensureLogin.ensureLoggedIn('/'), function (req, res) {
     res.render('mypolls', {user: req.user});
 });
+
+app.get('/newpoll', ensureLogin.ensureLoggedIn('/'), function (req, res) {
+    res.render('newpoll', {user: req.user});
+});
+
 
 app.listen(3000, function () {
     console.log('Listening on port 3000');
