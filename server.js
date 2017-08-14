@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var ensureLogin = require('connect-ensure-login');
+var massive = require('massive');
 
 var dbUsers = require('./db/users');
 var secret = require('./secret');
@@ -30,7 +31,7 @@ passport.use(new facebookStrategy({
 
     return cb(null, profile);
 
-}))
+}));
 
 passport.serializeUser(function (user, cb) {
     cb(null, user.id);
@@ -96,7 +97,43 @@ app.get('/newpoll', ensureLogin.ensureLoggedIn('/'), function (req, res) {
     res.render('newpoll', {user: req.user});
 });
 
+app.post('/signup', function (req, res) {
+    var displayName = req.body.displayName;
+    var username = req.body.username;
+    var password = req.body.password;
 
-app.listen(3000, function () {
-    console.log('Listening on port 3000');
+    //TODO: do express validation
+    var db = req.app.get('db');
+    db.users.findOne({
+        username: username
+    }).then((user) => {
+        if(!user) {
+
+            db.users.insert({
+                displayname: displayName,
+                username: username,
+                password: password
+            }).then((newUser) => {
+
+                //TODO: redirected logged in auth
+                return res.status(200).send(newUser);
+
+            });
+
+        } else {
+            //TODO: message username has been taken
+            return res.redirect('/');
+        }
+    });
+
+
 });
+
+massive(secret.DB_URI)
+    .then((db) => {
+        app.set('db', db);
+
+        app.listen(3000, function () {
+            console.log('Listening on port 3000');
+        });
+    });
