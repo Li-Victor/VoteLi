@@ -8,6 +8,7 @@ var session = require('express-session');
 var ensureLogin = require('connect-ensure-login');
 var massive = require('massive');
 var flash = require('connect-flash');
+var crypto = require('crypto');
 
 var dbUsers = require('./db/users');
 var secret = require('./secret');
@@ -44,7 +45,16 @@ passport.use(new facebookStrategy({
     profileFields: ['id', 'displayName', 'email']
 }, function (accessToken, refreshToken, profile, cb) {
 
-    return cb(null, profile);
+    var id = profile.id;
+    var displayName = profile.displayName;
+
+    var usernameHash = crypto.createHash('md5').update(id).digest('hex');
+    var passwordHash = crypto.createHash('md5').update(id + displayName).digest('hex');
+
+    dbUsers.fbUser(dbConnection, usernameHash, passwordHash, displayName, function (err, userObj) {
+        if(err) { return cb(err); }
+        return cb(null, userObj);
+    });
 
 }));
 
@@ -106,14 +116,12 @@ app.post('/register', passport.authenticate('local-register', {
 ));
 
 //passport-Facebook login
-app.get('/login/facebook', passport.authenticate('facebook', {authType: 'rerequest', scope: ['email'] } ));
+app.get('/login/facebook', passport.authenticate('facebook'));
 
 app.get('/login/facebook/return', passport.authenticate('facebook', {
+    successRedirect: '/',
     failureRedirect: '/'
-}), function (req, res) {
-    res.redirect('/');
-});
-
+}));
 
 app.get('/logout', function (req, res) {
     req.logout();

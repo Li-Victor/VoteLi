@@ -52,6 +52,32 @@ module.exports = {
             });
         });
 
+    },
+
+    fbUser: function (dbConnection, username, password, displayName, cb) {
+
+        dbConnection.then((db) => {
+            db.users.findOne({
+                username: username
+            }).then((user) => {
+
+                if(user) cb(null, user);
+                else {
+
+                    db.users.insert({
+                        displayname: displayName,
+                        username: username,
+                        password: password
+                    }).then((newUser) => {
+                        if(newUser) cb(null, newUser);
+                        else { cb(new Error('Something wrong with inserting with fbUser function')); }
+                    });
+
+                }
+
+            });
+        });
+        
     }
 
 }
