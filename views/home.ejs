@@ -1,4 +1,8 @@
 <h1><a href="/">Lets-Vote</a></h1>
+<% if (message) { %>
+<%= message %>
+<% } %>
+
 <% if (!user) { %>
 
 	<h1>Login</h1>
@@ -23,7 +27,7 @@
 
 	<h1>Register</h1>
 
-	<form action="/signup" method="post">
+	<form action="/register" method="post">
 		<div>
 			<label for="displayName">Name:</label>
 			<input type="text" name="displayName" value="">
@@ -46,7 +50,7 @@
 
 
 <% } else { %>
-	<p><%= user.displayName%></p>
+	<p><%= user.displayname%></p>
 	<p><a href="/newpoll">New poll</a></p>
     <p><a href="/mypolls">my polls</a></p>
     <p><a href="/logout">Log out</a></p>

@@ -7,18 +7,21 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var ensureLogin = require('connect-ensure-login');
 var massive = require('massive');
+var flash = require('connect-flash');
 
 var dbUsers = require('./db/users');
 var secret = require('./secret');
 
-passport.use(new localStrategy(
-    function (username, password, cb) {
-        dbUsers.findByUsername(username, function (err, userObj) {
+var dbConnection = massive(secret.DB_URI);
+
+passport.use('local-register', new localStrategy({
+        passReqToCallback: true
+    }, function (req, username, password, cb) {
+        dbUsers.registerByUsername(dbConnection, username, password, req.body.displayName, function (err, userObj) {
             if(err) { return cb(err); }
-            if(!userObj) { return cb(null, false); }
-            if(userObj.password != password) { return cb(null, false); }
+            if(!userObj) { return cb(null, false, { message: 'Username ' + username + ' has already been taken'}); }
             return cb(null, userObj);
-        });
+        })
     }
 ));
 
@@ -38,7 +41,7 @@ passport.serializeUser(function (user, cb) {
 });
 
 passport.deserializeUser(function (id, cb) {
-    dbUsers.findById(id, function (err, user) {
+    dbUsers.findById(dbConnection, id, function (err, user) {
         if(err) { return cb(err); }
         cb(null, user);
     });
@@ -58,6 +61,8 @@ app.use(session({
     }
 }));
 
+app.use(flash());
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -65,7 +70,10 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.get('/', function (req, res) {
-    res.render('home', {user: req.user});
+    res.render('home', {
+        user: req.user,
+        message: req.flash('error')[0]
+    });
 });
 
 
@@ -73,6 +81,14 @@ app.get('/', function (req, res) {
 app.post('/login', passport.authenticate('local', { failureRedirect: '/'} ), function (req, res) {
     res.redirect('/');
 });
+
+//Passport-Local register
+app.post('/register', passport.authenticate('local-register', {
+        successRedirect: '/',
+        failureRedirect: '/',
+        failureFlash: true
+    }
+));
 
 //passport-Facebook login
 app.get('/login/facebook', passport.authenticate('facebook', {authType: 'rerequest', scope: ['email'] } ));
@@ -97,43 +113,10 @@ app.get('/newpoll', ensureLogin.ensureLoggedIn('/'), function (req, res) {
     res.render('newpoll', {user: req.user});
 });
 
-app.post('/signup', function (req, res) {
-    var displayName = req.body.displayName;
-    var username = req.body.username;
-    var password = req.body.password;
+dbConnection.then((db) => {
+    app.set('db', db);
 
-    //TODO: do express validation
-    var db = req.app.get('db');
-    db.users.findOne({
-        username: username
-    }).then((user) => {
-        if(!user) {
-
-            db.users.insert({
-                displayname: displayName,
-                username: username,
-                password: password
-            }).then((newUser) => {
-
-                //TODO: redirected logged in auth
-                return res.status(200).send(newUser);
-
-            });
-
-        } else {
-            //TODO: message username has been taken
-            return res.redirect('/');
-        }
+    app.listen(3000, function () {
+        console.log('Listening on port 3000');
     });
-
-
 });
-
-massive(secret.DB_URI)
-    .then((db) => {
-        app.set('db', db);
-
-        app.listen(3000, function () {
-            console.log('Listening on port 3000');
-        });
-    });

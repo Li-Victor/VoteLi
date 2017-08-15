@@ -1,21 +1,14 @@
-var records = [
-    {id: 1, username: 'username', password: 'password', displayName: 'First user'},
-    {id: 1982584305101139, username: 'victoremail', password: 'victorpassword', displayName: 'Victor Li'}
-];
-
 module.exports = {
 
-    findById: function (id, cb) {
+    findById: function (dbConnection, id, cb) {
 
-        process.nextTick(function () {
-            for(var i = 0; i < records.length; i++) {
-                var record = records[i];
-                if(record.id === Number(id)) {
-                    return cb(null, records[i]);
-                }
-            }
-            return cb(new Error('User ' + id + ' does not exist'));
-
+        dbConnection.then((db) => {
+            db.users.findOne({
+                id: id
+            }).then((user) => {
+                if(user) cb(null, user);
+                else { cb(new Error('User ' + id + ' does not exist.')); }
+            });
         });
 
     },
@@ -31,6 +24,34 @@ module.exports = {
         }
             return cb(null, null);
         });
+    },
+
+    registerByUsername: function (dbConnection, username, password, displayname, cb) {
+
+        dbConnection.then((db) => {
+            db.users.findOne({
+                username: username
+            }).then((user) => {
+
+                //adds a new user, since db cannot find one
+                if(!user) {
+
+                    db.users.insert({
+                        displayname: displayname,
+                        username: username,
+                        password: password
+                    }).then((newUser) => {
+                        if(newUser) cb(null, newUser);
+                        else { cb(new Error('Something wrong with inserting with registerByUsername function')); }
+                    });
+
+                } else {
+                    cb(null, null);
+                }
+
+            });
+        });
+
     }
 
 }
