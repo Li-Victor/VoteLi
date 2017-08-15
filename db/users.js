@@ -13,17 +13,17 @@ module.exports = {
 
     },
 
-    findByUsername: function (username, cb) {
-        process.nextTick(function () {
-        for (var i = 0; i < records.length; i++) {
-            var record = records[i];
-            if(record.username === username) {
-                //return userObject
-                return cb(null, record);
-            }
-        }
-            return cb(null, null);
+    findByUsername: function (dbConnection, username, cb) {
+
+        dbConnection.then((db) => {
+            db.users.findOne({
+                username: username
+            }).then((user) => {
+                if(user) cb(null, user);
+                else { cb(null, null); }
+            });
         });
+
     },
 
     registerByUsername: function (dbConnection, username, password, displayname, cb) {

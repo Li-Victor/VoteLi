@@ -14,6 +14,18 @@ var secret = require('./secret');
 
 var dbConnection = massive(secret.DB_URI);
 
+passport.use('local-login', new localStrategy({
+        passReqToCallback: true
+    }, function (req, username, password, cb) {
+        dbUsers.findByUsername(dbConnection, username, function (err, userObj) {
+            if(err) { return cb(err); }
+            if(!userObj) { return cb(null, false, { message: 'Wrong credentials' }); }
+            if(userObj.password != password) { return cb(null, false, { message: 'Wrong credentials' }); }
+            return cb(null, userObj);
+        });
+    }
+));
+
 passport.use('local-register', new localStrategy({
         passReqToCallback: true
     }, function (req, username, password, cb) {
@@ -21,7 +33,7 @@ passport.use('local-register', new localStrategy({
             if(err) { return cb(err); }
             if(!userObj) { return cb(null, false, { message: 'Username ' + username + ' has already been taken'}); }
             return cb(null, userObj);
-        })
+        });
     }
 ));
 
@@ -78,9 +90,12 @@ app.get('/', function (req, res) {
 
 
 //Passport-Local Login
-app.post('/login', passport.authenticate('local', { failureRedirect: '/'} ), function (req, res) {
-    res.redirect('/');
-});
+app.post('/login', passport.authenticate('local-login', {
+        successRedirect: '/',
+        failureRedirect: '/',
+        failureFlash: true
+    }
+));
 
 //Passport-Local register
 app.post('/register', passport.authenticate('local-register', {
