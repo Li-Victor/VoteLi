@@ -3,7 +3,6 @@ var passport = require('passport');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var ensureLogin = require('connect-ensure-login');
 var massive = require('massive');
 var flash = require('connect-flash');
 var expressValidator = require('express-validator');
@@ -12,6 +11,8 @@ var path = require('path');
 var dbConnection = require('./models/dbConnection');
 var passportConfig = require('./config/passport');
 var secret = require('./secret');
+var homeController = require('./controllers/home');
+var userController = require('./controllers/user');
 
 var app = express();
 
@@ -38,50 +39,20 @@ app.use(passport.session());
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-app.get('/', function (req, res) {
-    res.render('home', {
-        user: req.user,
-        message: req.flash('error')[0]
-    });
-});
-
-//Passport-Local Login
-app.post('/login', passport.authenticate('local-login', {
-        successRedirect: '/',
-        failureRedirect: '/',
-        failureFlash: true
-    }
-));
-
-//Passport-Local register
-app.post('/register', passport.authenticate('local-register', {
-        successRedirect: '/',
-        failureRedirect: '/',
-        failureFlash: true
-    }
-));
+//Routes to pages
+app.get('/', homeController.index);
+app.post('/login', userController.postLogin);
+app.post('/register', userController.postRegister);
+app.get('/logout', userController.getLogout);
+app.get('/mypolls', passportConfig.isAuthenticated, userController.getMyPolls);
+app.get('/newpoll', passportConfig.isAuthenticated, userController.getNewPolls);
 
 //passport-Facebook login
 app.get('/login/facebook', passport.authenticate('facebook'));
-
 app.get('/login/facebook/return', passport.authenticate('facebook', {
     successRedirect: '/',
     failureRedirect: '/'
 }));
-
-app.get('/logout', function (req, res) {
-    req.logout();
-    res.redirect('/');
-});
-
-app.get('/mypolls', ensureLogin.ensureLoggedIn('/'), function (req, res) {
-    res.render('mypolls', {user: req.user} );
-});
-
-app.get('/newpoll', ensureLogin.ensureLoggedIn('/'), function (req, res) {
-    res.render('newpoll', {user: req.user} );
-});
 
 dbConnection.then((db) => {
     app.set('db', db);
