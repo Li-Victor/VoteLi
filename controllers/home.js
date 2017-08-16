@@ -5,7 +5,7 @@ module.exports = {
     index: function (req, res) {
         res.render('home', {
             user: req.user,
-            message: req.flash('error')[0]
+            message: req.flash('error')
         });
     }
 };

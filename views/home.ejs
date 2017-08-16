@@ -7,11 +7,14 @@ if (window.location.hash == '#_=_'){
 </script>
 
 <h1><a href="/">Lets-Vote</a></h1>
-<% if (message) { %>
-<%= message %>
-<% } %>
 
 <% if (!user) { %>
+
+	<% if (message) { %>
+		<% for (var key in message ) { %>
+			<p><%= message[key] %></p>
+		<% } %>
+	<% } %>
 
 	<h1>Login</h1>
 
