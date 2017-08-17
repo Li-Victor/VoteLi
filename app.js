@@ -13,6 +13,7 @@ var passportConfig = require('./config/passport');
 var secret = require('./secret');
 var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
+var pollController = require('./controllers/poll');
 
 var app = express();
 
@@ -53,6 +54,15 @@ app.get('/login/facebook/return', passport.authenticate('facebook', {
     successRedirect: '/',
     failureRedirect: '/'
 }));
+
+//api routes
+app.get('/api/polls', pollController.getPolls);
+app.get('/api/poll/:id', pollController.getPollById);
+app.get('/api/pollOptions/:id', pollController.getPollOptionsById);
+app.post('/api/poll', pollController.postPoll);
+app.post('/api/pollOption/:id', pollController.postPollOptionById);
+app.put('/api/poll/:id', pollController.putPollById);
+app.delete('/api/poll/:id', pollController.deletePollById);
 
 dbConnection.then((db) => {
     app.set('db', db);
