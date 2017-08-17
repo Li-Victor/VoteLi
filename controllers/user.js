@@ -25,9 +25,7 @@ module.exports = {
                     failureFlash: true
                 }
             )(req, res, next);
-
         });
-
 
     },
 

@@ -1,7 +1,6 @@
 module.exports = {
 
     findById: function (dbConnection, id, cb) {
-
         dbConnection.then((db) => {
             db.users.findOne({
                 id: id
@@ -10,11 +9,9 @@ module.exports = {
                 else { cb(new Error('User ' + id + ' does not exist.')); }
             });
         });
-
     },
 
     findByUsername: function (dbConnection, username, cb) {
-
         dbConnection.then((db) => {
             db.users.findOne({
                 username: username
@@ -27,7 +24,6 @@ module.exports = {
     },
 
     registerByUsername: function (dbConnection, username, password, displayname, cb) {
-
         dbConnection.then((db) => {
             db.users.findOne({
                 username: username
@@ -55,7 +51,6 @@ module.exports = {
     },
 
     fbUser: function (dbConnection, username, password, displayName, cb) {
-
         dbConnection.then((db) => {
             db.users.findOne({
                 username: username
@@ -77,7 +72,6 @@ module.exports = {
 
             });
         });
-        
-    }
 
-}
+    }
+};
