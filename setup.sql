@@ -13,12 +13,14 @@ CREATE TABLE poll (
 );
 
 CREATE TABLE log (
+    logid SERIAL NOT NULL PRIMARY KEY,
     pollid SERIAL NOT NULL,
     userip TEXT NOT NULL,
     FOREIGN KEY (pollid) REFERENCES poll(pollid) ON DELETE CASCADE
 );
 
 CREATE TABLE choices (
+    choicesid SERIAL NOT NULL PRIMARY KEY,
     pollid SERIAL NOT NULL,
     option TEXT NOT NULL,
     votes INT NOT NULL DEFAULT 0,
