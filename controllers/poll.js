@@ -5,7 +5,8 @@ module.exports = {
     //GET /api/polls
     //gets all the polls
     getPolls: function (req, res, next) {
-        pollModel.getPolls().then((polls) => {
+        var db = req.app.get('db');
+        pollModel.getPolls(db).then((polls) => {
             res.status(200).send(polls);
         });
     },
@@ -13,9 +14,10 @@ module.exports = {
     //GET /api/poll/:id
     //gets the poll by id
     getPollById: function (req, res, next) {
+        var db = req.app.get('db');
         var id = Number(req.params.id);
 
-        pollModel.getPollById(id).then((poll) => {
+        pollModel.getPollById(db, id).then((poll) => {
             if(poll) { return res.status(200).send(poll); }
             else { return res.status(404).send('this poll does not exist'); }
         });
@@ -24,9 +26,10 @@ module.exports = {
     //GET /api/pollOptions/:id
     //gets the options by the poll id
     getPollOptionsById: function (req, res, next) {
+        var db = req.app.get('db');
         var id = Number(req.params.id);
 
-        pollModel.getPollOptionsById(id).then((options) => {
+        pollModel.getPollOptionsById(db, id).then((options) => {
             if(options.length > 0) {
                 var arr = options.map(function (option) {
                     return option.option;

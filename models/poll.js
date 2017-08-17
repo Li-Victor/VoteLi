@@ -1,23 +1,15 @@
-var dbConnection = require('./dbConnection');
-
 module.exports = {
-    getPolls: function () {
-        return dbConnection.then((db) => {
-            return db.poll.find();
+    getPolls: function (db) {
+        return db.poll.find();
+    },
+
+    getPollById: function (db, id) {
+        return db.poll.findOne({
+            pollid: id
         });
     },
 
-    getPollById: function (id) {
-        return dbConnection.then((db) => {
-            return db.poll.findOne({
-                pollid: id
-            });
-        });
-    },
-
-    getPollOptionsById: function (id) {
-        return dbConnection.then((db) => {
-            return db.getPollOptionsById([id]);
-        })
+    getPollOptionsById: function (db, id) {
+        return db.getPollOptionsById([id]);
     }
 };
