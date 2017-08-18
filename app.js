@@ -14,6 +14,7 @@ var secret = require('./secret');
 var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
 var pollController = require('./controllers/poll');
+var ErrorController = require('./controllers/error');
 
 var app = express();
 
@@ -63,6 +64,9 @@ app.post('/api/poll', pollController.postPoll);
 app.post('/api/pollOption/:id', pollController.postPollOptionById);
 app.put('/api/poll/:id', pollController.putPollById);
 app.delete('/api/poll/:id', pollController.deletePollById);
+
+//closing all other routes
+app.all('*', ErrorController.index);
 
 dbConnection.then((db) => {
     app.set('db', db);
