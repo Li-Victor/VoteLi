@@ -71,7 +71,7 @@ app.all('*', ErrorController.index);
 dbConnection.then((db) => {
     app.set('db', db);
 
-    app.listen(3000, function () {
-        console.log('Listening on port 3000');
+    app.listen(5000, function () {
+        console.log('Listening on port 5000');
     });
 });
