@@ -1,11 +1,10 @@
 module.exports = {
-
-    // GET /
-    // Home page.
-    index: function (req, res) {
-        res.render('home', {
-            user: req.user,
-            message: req.flash('error')
-        });
-    }
+  // GET /
+  // Home page.
+  index(req, res) {
+    res.render('home', {
+      user: req.user,
+      message: req.flash('error')
+    });
+  }
 };
