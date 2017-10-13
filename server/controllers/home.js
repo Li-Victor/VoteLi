@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   // GET /
   // Home page.
   index(req, res) {

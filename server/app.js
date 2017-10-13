@@ -1,19 +1,19 @@
-const express = require('express');
-const passport = require('passport');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const session = require('express-session');
-const flash = require('connect-flash');
-const expressValidator = require('express-validator');
-const path = require('path');
+import express from 'express';
+import passport from 'passport';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import session from 'express-session';
+import flash from 'connect-flash';
+import expressValidator from 'express-validator';
+import path from 'path';
 
-const dbConnection = require('./models/dbConnection');
-const passportConfig = require('./config/passport');
-const secret = require('./secret');
-const homeController = require('./controllers/home');
-const userController = require('./controllers/user');
-const pollController = require('./controllers/poll');
-const ErrorController = require('./controllers/error');
+import dbConnection from './models/dbConnection';
+import passportConfig from './config/passport';
+import secret from './secret';
+import homeController from './controllers/home';
+import userController from './controllers/user';
+import pollController from './controllers/poll';
+import ErrorController from './controllers/error';
 
 const app = express();
 

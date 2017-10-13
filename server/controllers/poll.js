@@ -1,4 +1,4 @@
-const pollModel = require('../models/poll');
+import pollModel from '../models/poll';
 
 module.exports = {
   // GET /api/polls
