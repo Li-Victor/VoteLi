@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   getPolls(db) {
     return db.poll.find();
   },

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   findById(db, id, cb) {
     db.users
       .findOne({

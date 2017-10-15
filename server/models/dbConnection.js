@@ -1,6 +1,6 @@
-const secret = require('../secret');
-const massive = require('massive');
+import massive from 'massive';
+import secret from '../secret';
 
-module.exports = massive(secret.DB_URI, {
+export default massive(secret.DB_URI, {
   scripts: './models/dbScripts'
 });

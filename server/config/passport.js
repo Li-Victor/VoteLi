@@ -1,10 +1,10 @@
-const passport = require('passport');
-const localStrategy = require('passport-local').Strategy;
-const facebookStrategy = require('passport-facebook').Strategy;
-const crypto = require('crypto');
+import passport from 'passport';
+import { Strategy as localStrategy } from 'passport-local';
+import { Strategy as facebookStrategy } from 'passport-facebook';
+import crypto from 'crypto';
 
-const dbUsers = require('../models/users');
-const secret = require('../secret');
+import dbUsers from '../models/users';
+import secret from '../secret';
 
 passport.serializeUser((user, cb) => {
   cb(null, user.id);
@@ -98,7 +98,7 @@ passport.use(
   )
 );
 
-module.exports = {
+export default {
   isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return next();

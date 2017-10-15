@@ -1,6 +1,6 @@
 import pollModel from '../models/poll';
 
-module.exports = {
+export default {
   // GET /api/polls
   // gets all the polls
   getPolls(req, res, next) {

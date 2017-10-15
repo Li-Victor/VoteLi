@@ -1,6 +1,6 @@
 import passport from 'passport';
 
-module.exports = {
+export default {
   // Passport-Local Login
   // POST /Login
   // Sign in using username and password
