@@ -51,20 +51,20 @@ export default {
 
   // GET /logout
   // Log out
-  getLogout(req, res, next) {
+  getLogout(req, res) {
     req.logout();
     res.redirect('/');
   },
 
   // GET /mypolls
   // mypolls page
-  getMyPolls(req, res, next) {
+  getMyPolls(req, res) {
     res.render('mypolls', { user: req.user });
   },
 
   // GET /newpolls
   // newpolls page
-  getNewPolls(req, res, next) {
+  getNewPolls(req, res) {
     res.render('newpoll', { user: req.user });
   }
 };

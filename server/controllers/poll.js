@@ -3,7 +3,7 @@ import pollModel from '../models/poll';
 export default {
   // GET /api/polls
   // gets all the polls
-  getPolls(req, res, next) {
+  getPolls(req, res) {
     const db = req.app.get('db');
     pollModel.getPolls(db).then((polls) => {
       res.status(200).send(polls);
@@ -12,7 +12,7 @@ export default {
 
   // GET /api/poll/:id
   // gets the poll by id
-  getPollById(req, res, next) {
+  getPollById(req, res) {
     const db = req.app.get('db');
     const id = Number(req.params.id);
 
@@ -26,7 +26,7 @@ export default {
 
   // GET /api/pollOptions/:id
   // gets the options by the poll id
-  getPollOptionsById(req, res, next) {
+  getPollOptionsById(req, res) {
     const db = req.app.get('db');
     const id = Number(req.params.id);
 
@@ -41,7 +41,7 @@ export default {
 
   // POST /api/poll
   // adds a new poll
-  postPoll(req, res, next) {
+  postPoll(req, res) {
     const db = req.app.get('db');
     const question = req.query.question;
     const userid = Number(req.query.userid);
@@ -57,7 +57,7 @@ export default {
 
   // POST /api/pollOption/:id
   // adds a new option to a poll determined by the id
-  postPollOptionById(req, res, next) {
+  postPollOptionById(req, res) {
     const db = req.app.get('db');
     const pollid = Number(req.params.id);
     const option = req.query.option;
@@ -70,7 +70,7 @@ export default {
 
   // PUT /api/poll/:id
   // casts a vote to a particular poll and also logs the user's ip
-  putPollById(req, res, next) {
+  putPollById(req, res) {
     const db = req.app.get('db');
     const pollid = Number(req.params.id);
     const option = req.query.option;
@@ -83,7 +83,7 @@ export default {
 
   // DELETE /api/poll/:id
   // deletes a poll by its id
-  deletePollById(req, res, next) {
+  deletePollById(req, res) {
     const db = req.app.get('db');
     const pollid = Number(req.params.id);
 

@@ -1,6 +1,6 @@
 import passport from 'passport';
-import { Strategy as localStrategy } from 'passport-local';
-import { Strategy as facebookStrategy } from 'passport-facebook';
+import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
 import crypto from 'crypto';
 
 import dbUsers from '../models/users';
@@ -22,7 +22,7 @@ passport.deserializeUser((req, id, cb) => {
 
 passport.use(
   'local-login',
-  new localStrategy(
+  new LocalStrategy(
     {
       passReqToCallback: true
     },
@@ -46,7 +46,7 @@ passport.use(
 
 passport.use(
   'local-register',
-  new localStrategy(
+  new LocalStrategy(
     {
       passReqToCallback: true
     },
@@ -66,7 +66,7 @@ passport.use(
 );
 
 passport.use(
-  new facebookStrategy(
+  new FacebookStrategy(
     {
       clientID: secret.FB_CLIENT_ID,
       clientSecret: secret.FB_CLIENT_SECRET,
