@@ -6,15 +6,16 @@ import session from 'express-session';
 import flash from 'connect-flash';
 import expressValidator from 'express-validator';
 import path from 'path';
+import dotenv from 'dotenv';
 
 import dbConnection from './models/dbConnection';
 import passportConfig from './config/passport';
-import secret from './secret';
 import homeController from './controllers/home';
 import userController from './controllers/user';
 import pollController from './controllers/poll';
 import ErrorController from './controllers/error';
 
+dotenv.config();
 const app = express();
 
 app.set('views', `${__dirname}/views`);
@@ -27,7 +28,7 @@ app.use(expressValidator());
 
 app.use(
   session({
-    secret: secret.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
