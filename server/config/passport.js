@@ -4,7 +4,6 @@ import { Strategy as FacebookStrategy } from 'passport-facebook';
 import crypto from 'crypto';
 
 import dbUsers from '../models/users';
-import secret from '../secret';
 
 passport.serializeUser((user, cb) => {
   cb(null, user.id);
@@ -68,8 +67,8 @@ passport.use(
 passport.use(
   new FacebookStrategy(
     {
-      clientID: secret.FB_CLIENT_ID,
-      clientSecret: secret.FB_CLIENT_SECRET,
+      clientID: process.env.FB_CLIENT_ID,
+      clientSecret: process.env.FB_CLIENT_SECRET,
       callbackURL: 'http://localhost:3000/login/facebook/return',
       profileFields: ['id', 'displayName', 'email'],
       passReqToCallback: true
