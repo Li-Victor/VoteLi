@@ -5,12 +5,13 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
 import axios from 'axios';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 import App from './App';
 import rootReducer from './rootReducer';
 import { fetchUser } from './actions/user';
 
-const store = createStore(rootReducer, {}, applyMiddleware(reduxThunk));
+const store = createStore(rootReducer, {}, composeWithDevTools(applyMiddleware(reduxThunk)));
 
 if (window.location.hash === '#_=_') {
   if (window.history.replaceState) {
