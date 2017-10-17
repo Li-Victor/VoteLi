@@ -9,6 +9,7 @@ import path from 'path';
 
 import dbConnection from './models/dbConnection';
 import passportConfig from './config/passport';
+// TODO: delete?
 import homeController from './controllers/home';
 import userController from './controllers/user';
 import pollController from './controllers/poll';
@@ -67,6 +68,19 @@ app.post('/api/poll', pollController.postPoll);
 app.post('/api/pollOption/:id', pollController.postPollOptionById);
 app.put('/api/poll/:id', pollController.putPollById);
 app.delete('/api/poll/:id', pollController.deletePollById);
+
+// TODO: fix this and move this to another folder
+app.get('/auth/current_user', (req, res) => {
+  if (req.user) {
+    return res.send({
+      id: req.user.id,
+      username: req.user.username,
+      displayName: req.user.displayName,
+      emails: req.user.emails
+    });
+  }
+  return res.send({});
+});
 
 // closing all other routes
 app.all('*', ErrorController.index);
