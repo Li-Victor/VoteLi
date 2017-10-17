@@ -4,7 +4,12 @@
   "description": "A voting app in which each poll is graphed",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon --exec node --require dotenv/config --require babel-register server/app.js"
+    "build": "yarn && cd client && yarn && cd..",
+    "prod":
+      "cd client && yarn && yarn build && cd .. && node --require dotenv/config --require babel-register server/app.js",
+    "server": "nodemon --exec node --require dotenv/config --require babel-register server/app.js",
+    "client": "cd client && yarn start",
+    "dev": "concurrently \"yarn run server\" \"yarn run client\""
   },
   "repository": {
     "type": "git",
@@ -21,6 +26,7 @@
     "babel-eslint": "^8.0.1",
     "babel-preset-env": "^1.6.0",
     "body-parser": "^1.17.2",
+    "concurrently": "^3.5.0",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
     "dotenv": "^4.0.0",
