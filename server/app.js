@@ -82,6 +82,11 @@ app.get('/auth/current_user', (req, res) => {
   return res.send({});
 });
 
+app.get('/auth/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
+
 // closing all other routes
 app.all('*', ErrorController.index);
 

@@ -1,5 +1,11 @@
 import React from 'react';
+import TopNav from './TopNav';
 
-const HomePage = () => <p>Home Page</p>;
+const HomePage = () => (
+  <div>
+    <TopNav />
+    <p>Rest of the polls</p>
+  </div>
+);
 
 export default HomePage;
