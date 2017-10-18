@@ -3,7 +3,6 @@ import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import session from 'express-session';
-import flash from 'connect-flash';
 import path from 'path';
 
 import dbConnection from './models/dbConnection';
@@ -32,7 +31,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(flash());
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 // passport-Facebook login
