@@ -1,5 +1,4 @@
 import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import crypto from 'crypto';
 
@@ -20,56 +19,11 @@ passport.deserializeUser((req, id, cb) => {
 });
 
 passport.use(
-  'local-login',
-  new LocalStrategy(
-    {
-      passReqToCallback: true
-    },
-    (req, username, password, cb) => {
-      const db = req.app.get('db');
-      dbUsers.findByUsername(db, username, (err, userObj) => {
-        if (err) {
-          return cb(err);
-        }
-        if (!userObj) {
-          return cb(null, false, { message: 'Wrong credentials' });
-        }
-        if (userObj.password !== password) {
-          return cb(null, false, { message: 'Wrong credentials' });
-        }
-        return cb(null, userObj);
-      });
-    }
-  )
-);
-
-passport.use(
-  'local-register',
-  new LocalStrategy(
-    {
-      passReqToCallback: true
-    },
-    (req, username, password, cb) => {
-      const db = req.app.get('db');
-      dbUsers.registerByUsername(db, username, password, req.body.displayName, (err, userObj) => {
-        if (err) {
-          return cb(err);
-        }
-        if (!userObj) {
-          return cb(null, false, { message: `Username ${username} has already been taken` });
-        }
-        return cb(null, userObj);
-      });
-    }
-  )
-);
-
-passport.use(
   new FacebookStrategy(
     {
       clientID: process.env.FB_CLIENT_ID,
       clientSecret: process.env.FB_CLIENT_SECRET,
-      callbackURL: 'http://localhost:3000/login/facebook/return',
+      callbackURL: 'http://localhost:5000/login/facebook/return',
       profileFields: ['id', 'displayName', 'email'],
       passReqToCallback: true
     },
@@ -103,5 +57,20 @@ export default {
       return next();
     }
     return res.redirect('/');
+  },
+  currentUser(req, res) {
+    if (req.user) {
+      return res.send({
+        id: req.user.id,
+        username: req.user.username,
+        displayName: req.user.displayName,
+        emails: req.user.emails
+      });
+    }
+    return res.send({});
+  },
+  logout(req, res) {
+    req.logout();
+    res.redirect('/');
   }
 };
