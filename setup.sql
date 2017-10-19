@@ -1,14 +1,12 @@
 CREATE TABLE users (
-    id SERIAL NOT NULL PRIMARY KEY,
-    displayName TEXT NOT NULL,
-    username TEXT NOT NULL,
-    password TEXT NOT NULL
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    displayName TEXT NOT NULL
 );
 
 CREATE TABLE poll (
     pollid SERIAL NOT NULL PRIMARY KEY,
     userid SERIAL NOT NULL,
-    question TEXT NOT NULL,
+    topic TEXT NOT NULL,
     FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE
 );
 

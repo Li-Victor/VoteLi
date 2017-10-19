@@ -12,19 +12,18 @@ export default {
       });
   },
 
-  fbLogin(db, username, password, displayName, cb) {
+  fbLogin(db, id, displayname, cb) {
     db.users
       .findOne({
-        username
+        id
       })
       .then((user) => {
         if (user) cb(null, user);
         else {
           db.users
             .insert({
-              displayname: displayName,
-              username,
-              password
+              id,
+              displayname
             })
             .then((newUser) => {
               if (newUser) cb(null, newUser);

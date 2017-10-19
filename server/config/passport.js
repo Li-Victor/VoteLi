@@ -1,6 +1,5 @@
 import passport from 'passport';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
-import crypto from 'crypto';
 
 import dbUsers from '../models/users';
 
@@ -24,24 +23,15 @@ passport.use(
       clientID: process.env.FB_CLIENT_ID,
       clientSecret: process.env.FB_CLIENT_SECRET,
       callbackURL: 'http://localhost:5000/login/facebook/return',
-      profileFields: ['id', 'displayName', 'email'],
+      profileFields: ['id', 'displayName'],
       passReqToCallback: true
     },
     (req, accessToken, refreshToken, profile, cb) => {
       const id = profile.id;
-      const displayName = profile.displayName;
-
-      const usernameHash = crypto
-        .createHash('md5')
-        .update(id)
-        .digest('hex');
-      const passwordHash = crypto
-        .createHash('md5')
-        .update(id + displayName)
-        .digest('hex');
+      const displayname = profile.displayName;
 
       const db = req.app.get('db');
-      dbUsers.fbLogin(db, usernameHash, passwordHash, displayName, (err, userObj) => {
+      dbUsers.fbLogin(db, id, displayname, (err, userObj) => {
         if (err) {
           return cb(err);
         }
