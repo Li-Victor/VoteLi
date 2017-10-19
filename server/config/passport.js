@@ -41,7 +41,7 @@ passport.use(
         .digest('hex');
 
       const db = req.app.get('db');
-      dbUsers.fbUser(db, usernameHash, passwordHash, displayName, (err, userObj) => {
+      dbUsers.fbLogin(db, usernameHash, passwordHash, displayName, (err, userObj) => {
         if (err) {
           return cb(err);
         }
