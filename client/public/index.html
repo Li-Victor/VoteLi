@@ -10,6 +10,7 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -19,9 +20,9 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>VoteLi</title>
   </head>
-  <body>
+  <body class="dimmed dimmable">
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
@@ -36,5 +37,40 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <div id="docs-loading-dimmer" class="ui active page dimmer">
+    <div class="content">
+      <div class="center">
+        <div class="ui large text loader">
+          <div class="ui inverted teal header">
+            Loading data...
+          </div>
+          <div class="sub header">
+              VoteLi
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script>
+    /*eslint-disable */
+(function() {
+  var delay = 750;
+  var dimmer = document.querySelector('#docs-loading-dimmer');
+  dimmer.style.pointerEvents = 'none';
+  dimmer.style.transition = 'opacity ' + delay + 'ms linear';
+  function removeDimmer() {
+    dimmer.style.opacity = '0';
+    setTimeout(function() {
+      var dimmer = document.querySelector('#docs-loading-dimmer');
+      document.body.removeChild(dimmer);
+      document.body.setAttribute('class', '');
+      window.removeEventListener('load', removeDimmer);
+    }, delay);
+  }
+  window.addEventListener('load', removeDimmer);
+})();
+
+/*eslint-enable */
+</script>
   </body>
 </html>
