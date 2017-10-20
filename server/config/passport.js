@@ -47,20 +47,5 @@ export default {
       return next();
     }
     return res.status(401).json({ error: 'Not Authenticated' });
-  },
-  currentUser(req, res) {
-    if (req.user) {
-      return res.send({
-        id: req.user.id,
-        username: req.user.username,
-        displayName: req.user.displayName,
-        emails: req.user.emails
-      });
-    }
-    return res.send({});
-  },
-  logout(req, res) {
-    req.logout();
-    res.redirect('/');
   }
 };

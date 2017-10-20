@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import session from 'express-session';
 import path from 'path';
 
+import './config/passport';
 import dbConnection from './models/dbConnection';
 import poll from './routes/poll';
 import auth from './routes/auth';
