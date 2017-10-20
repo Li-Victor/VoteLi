@@ -48,13 +48,8 @@ app.get(
   })
 );
 
-// api routes
-app.get('/api/polls', poll.getPolls);
-app.get('/api/poll/:id', poll.getPollById);
-app.post('/api/poll', poll.postPoll);
-app.post('/api/poll/:id/option', poll.postPollOptionById);
-app.put('/api/poll/:id', poll.putPollById);
-app.delete('/api/poll/:id', poll.deletePollById);
+// all routing
+app.use('/api/poll', poll);
 
 // auth routes
 app.get('/auth/current_user', passportConfig.currentUser);
