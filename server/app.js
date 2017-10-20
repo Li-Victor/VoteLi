@@ -9,6 +9,7 @@ import './config/passport';
 import dbConnection from './models/dbConnection';
 import poll from './routes/poll';
 import auth from './routes/auth';
+import error from './routes/error';
 
 const app = express();
 
@@ -54,6 +55,8 @@ app.use('/api/poll', poll);
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
+
+app.use('', error);
 
 dbConnection.then((db) => {
   app.set('db', db);
