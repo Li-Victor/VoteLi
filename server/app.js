@@ -6,8 +6,8 @@ import session from 'express-session';
 import path from 'path';
 
 import dbConnection from './models/dbConnection';
-import passportConfig from './config/passport';
 import poll from './routes/poll';
+import auth from './routes/auth';
 
 const app = express();
 
@@ -47,11 +47,8 @@ app.get(
 );
 
 // all routing
+app.use('/auth', auth);
 app.use('/api/poll', poll);
-
-// auth routes
-app.get('/auth/current_user', passportConfig.currentUser);
-app.get('/auth/logout', passportConfig.logout);
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
