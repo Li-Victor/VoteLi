@@ -1,7 +1,8 @@
 import express from 'express';
+import isAuthenticated from '../middlewares/isAuthenticated';
 
 const router = express.Router();
-// need authentication middleware
+router.use(isAuthenticated);
 
 // GET /api/poll
 // gets all the polls, just need the topic and id for each poll
