@@ -9,7 +9,7 @@ import dbConnection from './models/dbConnection';
 import passportConfig from './config/passport';
 
 // TODO: delete?
-import pollController from './controllers/poll';
+import poll from './routes/poll';
 
 const app = express();
 
@@ -49,13 +49,12 @@ app.get(
 );
 
 // api routes
-app.get('/api/polls', pollController.getPolls);
-app.get('/api/poll/:id', pollController.getPollById);
-app.get('/api/pollOptions/:id', pollController.getPollOptionsById);
-app.post('/api/poll', pollController.postPoll);
-app.post('/api/pollOption/:id', pollController.postPollOptionById);
-app.put('/api/poll/:id', pollController.putPollById);
-app.delete('/api/poll/:id', pollController.deletePollById);
+app.get('/api/polls', poll.getPolls);
+app.get('/api/poll/:id', poll.getPollById);
+app.post('/api/poll', poll.postPoll);
+app.post('/api/poll/:id/option', poll.postPollOptionById);
+app.put('/api/poll/:id', poll.putPollById);
+app.delete('/api/poll/:id', poll.deletePollById);
 
 // auth routes
 app.get('/auth/current_user', passportConfig.currentUser);

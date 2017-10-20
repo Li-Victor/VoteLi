@@ -2,7 +2,7 @@ import pollModel from '../models/poll';
 
 export default {
   // GET /api/polls
-  // gets all the polls
+  // gets all the polls, just need the titles and id for each poll
   getPolls(req, res) {
     const db = req.app.get('db');
     pollModel.getPolls(db).then((polls) => {
@@ -19,21 +19,6 @@ export default {
     pollModel.getPollById(db, id).then((poll) => {
       if (poll) {
         return res.status(200).send(poll);
-      }
-      return res.status(404).send('this poll does not exist');
-    });
-  },
-
-  // GET /api/pollOptions/:id
-  // gets the options by the poll id
-  getPollOptionsById(req, res) {
-    const db = req.app.get('db');
-    const id = Number(req.params.id);
-
-    pollModel.getPollOptionsById(db, id).then((options) => {
-      if (options.length > 0) {
-        const arr = options.map(option => option.option);
-        return res.status(200).send(arr);
       }
       return res.status(404).send('this poll does not exist');
     });

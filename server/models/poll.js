@@ -9,10 +9,6 @@ export default {
     });
   },
 
-  getPollOptionsById(db, id) {
-    return db.getPollOptionsById([id]);
-  },
-
   postPoll(db, userid, question, options) {
     return db.poll
       .insert({
