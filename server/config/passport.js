@@ -46,7 +46,7 @@ export default {
     if (req.isAuthenticated()) {
       return next();
     }
-    return res.redirect('/');
+    return res.status(401).json({ error: 'Not Authenticated' });
   },
   currentUser(req, res) {
     if (req.user) {
