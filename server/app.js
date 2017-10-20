@@ -7,8 +7,6 @@ import path from 'path';
 
 import dbConnection from './models/dbConnection';
 import passportConfig from './config/passport';
-
-// TODO: delete?
 import poll from './routes/poll';
 
 const app = express();
