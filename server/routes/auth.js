@@ -4,11 +4,10 @@ const router = express.Router();
 
 router.get('/current_user', (req, res) => {
   if (req.user) {
+    const { id, displayname } = req.user;
     return res.send({
-      id: req.user.id,
-      username: req.user.username,
-      displayName: req.user.displayName,
-      emails: req.user.emails
+      id,
+      displayname
     });
   }
   return res.send({});

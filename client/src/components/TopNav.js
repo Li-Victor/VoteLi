@@ -13,6 +13,7 @@ const TopNav = ({ user }) => (
       <div>
         <p>My Polls</p>
         <p>New Poll</p>
+        <p>{user.displayname}</p>
         <a href="/auth/logout">Logout</a>
       </div>
     )}
