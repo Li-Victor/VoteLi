@@ -29,28 +29,32 @@ class NewPollPage extends React.Component {
       options: Validator.escape(this.state.data.options)
     };
     const errors = this.validate(sanitizedData);
-    console.log(errors);
-    console.log('submit form');
+    this.setState({ errors });
+    if (isEmptyObject(errors)) {
+      console.log(sanitizedData);
+      console.log('submit form');
+    }
   };
 
   validate = (data) => {
     const errors = {};
-    if (!Validator.isEmpty(data.topic)) errors.topic = 'Your poll needs a title';
+    if (Validator.isEmpty(data.topic)) errors.topic = 'Your poll needs a title!';
 
     const allOptions = data.options.split('\n');
     if (allOptions.length < 2) errors.options = 'You need 2 or more options to make a poll!';
 
     const allNoneEmptyOptions = allOptions.every(element => !Validator.isEmpty(element));
     if (!allNoneEmptyOptions && Object.prototype.hasOwnProperty.call(errors, 'options')) {
-      errors.options += ' All options cannot be blank';
+      errors.options += ' All options cannot be blank!';
     }
     if (!allNoneEmptyOptions && !Object.prototype.hasOwnProperty.call(errors, 'options')) {
-      errors.options = 'All options cannot be blank';
+      errors.options = 'All options cannot be blank!';
     }
     return errors;
   };
 
   render() {
+    const { data, errors, loading } = this.state;
     return (
       <div>
         <h1>Make a new poll!</h1>
@@ -61,24 +65,20 @@ class NewPollPage extends React.Component {
               type="text"
               id="topic"
               name="topic"
-              value={this.state.topic}
+              value={data.topic}
               onChange={this.onChange}
             />
           </label>
-
+          {errors.topic && <h3>{errors.topic}</h3>}
           <br />
 
           <label htmlFor="options">
             Options (seperated by line):
-            <textarea
-              id="options"
-              name="options"
-              value={this.state.options}
-              onChange={this.onChange}
-            />
+            <textarea id="options" name="options" value={data.options} onChange={this.onChange} />
           </label>
-
+          {errors.options && <h3>{errors.options}</h3>}
           <br />
+
           <input type="submit" value="Make!" />
         </form>
       </div>
