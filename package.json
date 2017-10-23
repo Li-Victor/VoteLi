@@ -7,7 +7,8 @@
     "build": "yarn && cd client && yarn && cd..",
     "prod":
       "cd client && yarn build && cd .. && node --require dotenv/config --require babel-register server/app.js",
-    "server": "nodemon --exec node --require dotenv/config --require babel-register server/app.js",
+    "server":
+      "nodemon --ignore client/ --exec node --require dotenv/config --require babel-register server/app.js",
     "client": "cd client && yarn start",
     "dev": "concurrently \"yarn run server\" \"yarn run client\""
   },
