@@ -10,7 +10,8 @@
     "server":
       "nodemon --ignore client/ --exec node --require dotenv/config --require babel-register server/app.js",
     "client": "cd client && yarn start",
-    "dev": "concurrently \"yarn run server\" \"yarn run client\""
+    "dev": "concurrently \"yarn run server\" \"yarn run client\"",
+    "lint": "eslint server client/src"
   },
   "repository": {
     "type": "git",
