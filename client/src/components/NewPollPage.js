@@ -30,7 +30,9 @@ class NewPollPage extends React.Component {
     };
     const errors = this.validate(sanitizedData);
     this.setState({ errors });
+    // no errors meaning errors is an empty object
     if (isEmptyObject(errors)) {
+      this.setState({ loading: true });
       console.log(sanitizedData);
       console.log('submit form');
     }
@@ -57,30 +59,40 @@ class NewPollPage extends React.Component {
     const { data, errors, loading } = this.state;
     return (
       <div>
-        <h1>Make a new poll!</h1>
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="topic">
-            Topic:
-            <input
-              type="text"
-              id="topic"
-              name="topic"
-              value={data.topic}
-              onChange={this.onChange}
-            />
-          </label>
-          {errors.topic && <h3>{errors.topic}</h3>}
-          <br />
+        {loading && <p>Loading...</p>}
+        {!loading && (
+          <div>
+            <h1>Make a new poll!</h1>
+            <form onSubmit={this.handleSubmit}>
+              <label htmlFor="topic">
+                Topic:
+                <input
+                  type="text"
+                  id="topic"
+                  name="topic"
+                  value={data.topic}
+                  onChange={this.onChange}
+                />
+              </label>
+              {errors.topic && <h3>{errors.topic}</h3>}
+              <br />
 
-          <label htmlFor="options">
-            Options (seperated by line):
-            <textarea id="options" name="options" value={data.options} onChange={this.onChange} />
-          </label>
-          {errors.options && <h3>{errors.options}</h3>}
-          <br />
+              <label htmlFor="options">
+                Options (seperated by line):
+                <textarea
+                  id="options"
+                  name="options"
+                  value={data.options}
+                  onChange={this.onChange}
+                />
+              </label>
+              {errors.options && <h3>{errors.options}</h3>}
+              <br />
 
-          <input type="submit" value="Make!" />
-        </form>
+              <input type="submit" value="Make!" />
+            </form>
+          </div>
+        )}
       </div>
     );
   }
