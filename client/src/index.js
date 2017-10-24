@@ -4,12 +4,12 @@ import { Route, BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
-import axios from 'axios';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import App from './App';
 import rootReducer from './rootReducer';
 import { fetchUser } from './actions/user';
+import api from './api';
 
 const store = createStore(rootReducer, {}, composeWithDevTools(applyMiddleware(reduxThunk)));
 
@@ -21,7 +21,7 @@ if (window.location.hash === '#_=_') {
   }
 }
 
-axios.get('/auth/current_user').then((res) => {
+api.user.login().then((res) => {
   store.dispatch(fetchUser(res));
 
   ReactDOM.render(
