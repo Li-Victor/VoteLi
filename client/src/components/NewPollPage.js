@@ -1,7 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Validator from 'validator';
+import { connect } from 'react-redux';
 
 import isEmptyObject from '../utils/isEmptyObject';
+import { makeNewPoll } from '../actions/user';
 
 class NewPollPage extends React.Component {
   constructor(props) {
@@ -33,8 +36,7 @@ class NewPollPage extends React.Component {
     // no errors meaning errors is an empty object
     if (isEmptyObject(errors)) {
       this.setState({ loading: true });
-      console.log(sanitizedData);
-      console.log('submit form');
+      this.props.makeNewPoll(sanitizedData).then();
     }
   };
 
@@ -98,4 +100,8 @@ class NewPollPage extends React.Component {
   }
 }
 
-export default NewPollPage;
+NewPollPage.propTypes = {
+  makeNewPoll: PropTypes.func.isRequired
+};
+
+export default connect(null, { makeNewPoll })(NewPollPage);
