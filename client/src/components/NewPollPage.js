@@ -36,7 +36,10 @@ class NewPollPage extends React.Component {
     // no errors meaning errors is an empty object
     if (isEmptyObject(errors)) {
       this.setState({ loading: true });
-      this.props.makeNewPoll(sanitizedData).then();
+      this.props
+        .makeNewPoll(sanitizedData)
+        .then(res => res)
+        .catch(err => this.setState({ errors: err.response.data.errors, loading: false }));
     }
   };
 
@@ -66,6 +69,7 @@ class NewPollPage extends React.Component {
           <div>
             <h1>Make a new poll!</h1>
             <form onSubmit={this.handleSubmit}>
+              {errors.global && <h2>{errors.global}</h2>}
               <label htmlFor="topic">
                 Topic:
                 <input

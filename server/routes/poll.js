@@ -35,30 +35,34 @@ router.get('/:pollid', (req, res) => {
 // adds a new poll from a userid
 router.post('/', (req, res) => {
   const db = req.app.get('db');
-  const topic = req.query.topic;
-  const userid = Number(req.query.userid);
-  // options will be delimited by "⦰⦰"
-  const options = req.query.options.split('⦰⦰');
+  const { newPollInfo } = req.body;
 
-  db.poll
-    .insert({
-      userid,
-      topic
-    })
-    .then((poll) => {
-      const pollid = poll.pollid;
-      const arr = options.map(option => ({
-        pollid,
-        option
-      }));
+  return res.status(400).json({ errors: { global: 'Something has gone terribly wrong' } });
 
-      return db.choices.insert(arr);
-    })
-    .then(result =>
-      // res.redirect('/poll/')
-      // result contains the inserted choices
-      res.status(200).send('this will redirect to the new poll page')
-    );
+  // const topic = req.query.topic;
+  // const userid = Number(req.query.userid);
+  // // options will be delimited by "⦰⦰"
+  // const options = req.query.options.split('⦰⦰');
+  //
+  // db.poll
+  //   .insert({
+  //     userid,
+  //     topic
+  //   })
+  //   .then((poll) => {
+  //     const pollid = poll.pollid;
+  //     const arr = options.map(option => ({
+  //       pollid,
+  //       option
+  //     }));
+  //
+  //     return db.choices.insert(arr);
+  //   })
+  //   .then(result =>
+  //     // res.redirect('/poll/')
+  //     // result contains the inserted choices
+  //     res.status(200).send('this will redirect to the new poll page')
+  //   );
 });
 
 // POST /api/poll/:pollid/option
