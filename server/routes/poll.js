@@ -1,5 +1,7 @@
 import express from 'express';
+import Validator from 'validator';
 import isAuthenticated from '../middlewares/isAuthenticated';
+import checkErrorNewPoll from '../utils/checkErrorNewPoll';
 
 const router = express.Router();
 router.use(isAuthenticated);
@@ -37,7 +39,13 @@ router.post('/', (req, res) => {
   const db = req.app.get('db');
   const { newPollInfo } = req.body;
 
-  return res.status(400).json({ errors: { global: 'Something has gone terribly wrong' } });
+  const topic = Validator.escape(newPollInfo.topic);
+  const options = newPollInfo.options.split('\n').map(option => Validator.escape(option));
+
+  const error = checkErrorNewPoll(topic, options);
+  if (!Validator.isEmpty(error)) {
+    return res.status(400).json({ errors: { global: error } });
+  }
 
   // const topic = req.query.topic;
   // const userid = Number(req.query.userid);

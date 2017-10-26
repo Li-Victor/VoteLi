@@ -5,10 +5,8 @@
   "main": "server.js",
   "scripts": {
     "build": "yarn && cd client && yarn && cd..",
-    "prod":
-      "cd client && yarn build && cd .. && node --require dotenv/config --require babel-register server/app.js",
-    "server":
-      "nodemon --ignore client/ --exec node --require dotenv/config --require babel-register server/app.js",
+    "prod": "cd client && yarn build && cd .. && node --require dotenv/config --require babel-register server/app.js",
+    "server": "nodemon --ignore client/ --exec node --require dotenv/config --require babel-register server/app.js",
     "client": "cd client && yarn start",
     "dev": "concurrently \"yarn run server\" \"yarn run client\"",
     "lint": "eslint server client/src"
@@ -35,7 +33,8 @@
     "express-session": "^1.15.5",
     "massive": "^3.2.0",
     "passport": "^0.4.0",
-    "passport-facebook": "^2.1.1"
+    "passport-facebook": "^2.1.1",
+    "validator": "^9.1.1"
   },
   "devDependencies": {
     "eslint": "4.6.1",
