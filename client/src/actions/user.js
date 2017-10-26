@@ -14,8 +14,7 @@ export const newPoll = res => ({
 
 // dispatchers
 export const makeNewPoll = newPollInfo => dispatch =>
-  api.user.makeNewPoll(newPollInfo).then((res) => {
-    console.log(res);
-    dispatch(newPoll(res));
-    return res;
-  });
+  api.user.makeNewPoll(newPollInfo).then(res =>
+    // dispatch(newPoll(res));
+    res
+  );

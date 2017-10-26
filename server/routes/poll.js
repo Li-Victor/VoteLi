@@ -47,30 +47,23 @@ router.post('/', (req, res) => {
     return res.status(400).json({ errors: { global: error } });
   }
 
-  // const topic = req.query.topic;
-  // const userid = Number(req.query.userid);
-  // // options will be delimited by "⦰⦰"
-  // const options = req.query.options.split('⦰⦰');
-  //
-  // db.poll
-  //   .insert({
-  //     userid,
-  //     topic
-  //   })
-  //   .then((poll) => {
-  //     const pollid = poll.pollid;
-  //     const arr = options.map(option => ({
-  //       pollid,
-  //       option
-  //     }));
-  //
-  //     return db.choices.insert(arr);
-  //   })
-  //   .then(result =>
-  //     // res.redirect('/poll/')
-  //     // result contains the inserted choices
-  //     res.status(200).send('this will redirect to the new poll page')
-  //   );
+  const userid = req.user.id;
+
+  return db.poll
+    .insert({
+      userid,
+      topic
+    })
+    .then((poll) => {
+      const pollid = poll.pollid;
+      const arr = options.map(option => ({
+        pollid,
+        option
+      }));
+
+      return db.choices.insert(arr);
+    })
+    .then(result => res.status(200).json({ pollid: result[0].pollid }));
 });
 
 // POST /api/poll/:pollid/option

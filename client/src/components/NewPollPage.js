@@ -38,7 +38,9 @@ class NewPollPage extends React.Component {
       this.setState({ loading: true });
       this.props
         .makeNewPoll(sanitizedData)
-        .then(res => res)
+        .then((res) => {
+          console.log(res);
+        })
         .catch(err => this.setState({ errors: err.response.data.errors, loading: false }));
     }
   };

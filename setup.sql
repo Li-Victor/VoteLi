@@ -5,7 +5,7 @@ CREATE TABLE users (
 
 CREATE TABLE poll (
     pollid SERIAL NOT NULL PRIMARY KEY,
-    userid SERIAL NOT NULL,
+    userid BIGSERIAL NOT NULL,
     topic TEXT NOT NULL,
     FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE
 );
