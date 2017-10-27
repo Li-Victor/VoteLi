@@ -33,6 +33,45 @@ router.get('/:pollid', (req, res) => {
     });
 });
 
+// makes a couple of requsts
+// 1. insert topics for new poll
+// 2. insert choices for the new poll
+// 3. get all user's polls
+// returns new created pollid and user's info
+function responseNewPoll(db, topic, options, userid, req, res) {
+  const insertTopicAndChoices = db.poll.insert({ userid, topic }).then((poll) => {
+    const pollid = poll.pollid;
+    const arr = options.map(option => ({
+      pollid,
+      option
+    }));
+    return db.choices.insert(arr);
+  });
+
+  const getUserPolls = insertTopicAndChoices.then(() =>
+    db.poll.find({
+      userid
+    })
+  );
+
+  // accessing previous promise results
+  // resultInsertTopicAndChoices and polls is the result of the two promises
+  return Promise.all([
+    insertTopicAndChoices,
+    getUserPolls
+  ]).then(([resultInsertTopicAndChoices, polls]) => {
+    const { id, displayname } = req.user;
+    return res.status(200).json({
+      pollid: resultInsertTopicAndChoices[0].pollid,
+      user: {
+        id,
+        displayname,
+        polls
+      }
+    });
+  });
+}
+
 // POST /api/poll
 // adds a new poll from a userid
 router.post('/', (req, res) => {
@@ -49,21 +88,7 @@ router.post('/', (req, res) => {
 
   const userid = req.user.id;
 
-  return db.poll
-    .insert({
-      userid,
-      topic
-    })
-    .then((poll) => {
-      const pollid = poll.pollid;
-      const arr = options.map(option => ({
-        pollid,
-        option
-      }));
-
-      return db.choices.insert(arr);
-    })
-    .then(result => res.status(200).json({ pollid: result[0].pollid }));
+  return responseNewPoll(db, topic, options, userid, req, res);
 });
 
 // POST /api/poll/:pollid/option
