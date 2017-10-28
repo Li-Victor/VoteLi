@@ -28,8 +28,9 @@ const TopNav = ({ user }) => (
 );
 
 TopNav.propTypes = {
-  // eslint-disable-next-line
-  user: PropTypes.object.isRequired
+  user: PropTypes.shape({
+    displayname: PropTypes.string
+  }).isRequired
 };
 
 function mapStateToProps(state) {
