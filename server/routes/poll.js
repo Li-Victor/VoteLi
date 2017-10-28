@@ -4,13 +4,12 @@ import isAuthenticated from '../middlewares/isAuthenticated';
 import checkErrorNewPoll from '../utils/checkErrorNewPoll';
 
 const router = express.Router();
-router.use(isAuthenticated);
 
 // GET /api/poll
 // gets all the polls, just need the topic and id for each poll
 router.get('/', (req, res) => {
   const db = req.app.get('db');
-  db.poll.find().then((polls) => {
+  db.poll.find({}, { columns: ['pollid', 'topic'] }).then((polls) => {
     res.status(200).send(polls);
   });
 });
@@ -74,7 +73,7 @@ function responseNewPoll(db, topic, options, userid, req, res) {
 
 // POST /api/poll
 // adds a new poll from a userid
-router.post('/', (req, res) => {
+router.post('/', isAuthenticated, (req, res) => {
   const db = req.app.get('db');
   const { newPollInfo } = req.body;
 
@@ -93,7 +92,7 @@ router.post('/', (req, res) => {
 
 // POST /api/poll/:pollid/option
 // adds a new option to a poll determined by the id
-router.post('/:pollid/option', (req, res) => {
+router.post('/:pollid/option', isAuthenticated, (req, res) => {
   const db = req.app.get('db');
   const pollid = Number(req.params.pollid);
   const option = req.query.option;
@@ -117,7 +116,7 @@ router.post('/:pollid/option', (req, res) => {
 
 // PUT /api/poll/:pollid
 // casts a vote to a particular poll and also logs the user's ip
-router.put('/:pollid', (req, res) => {
+router.put('/:pollid', isAuthenticated, (req, res) => {
   const db = req.app.get('db');
   const pollid = Number(req.params.pollid);
   const option = req.query.option;
@@ -138,7 +137,7 @@ router.put('/:pollid', (req, res) => {
 
 // DELETE /api/poll/:id
 // deletes a poll by its id
-router.delete('/:pollid', (req, res) => {
+router.delete('/:pollid', isAuthenticated, (req, res) => {
   const db = req.app.get('db');
   const pollid = Number(req.params.pollid);
 
