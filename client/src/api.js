@@ -5,5 +5,7 @@ export default {
     login: () => axios.get('/auth/current_user').then(res => res.data),
     makeNewPoll: newPollInfo => axios.post('/api/poll', { newPollInfo })
   },
-  polls: {}
+  poll: {
+    getPolls: () => axios.get('/api/poll')
+  }
 };
