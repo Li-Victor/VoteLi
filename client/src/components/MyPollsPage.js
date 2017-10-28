@@ -1,9 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const MyPollsPage = ({ polls }) => {
-  const listOfPolls = polls.map(poll => <p key={poll.pollid}>{poll.topic}</p>);
+  const listOfPolls = polls.map(poll => (
+    <div key={poll.pollid}>
+      <Link key={poll.pollid} to={`/poll/${poll.pollid}`}>
+        {poll.topic}
+      </Link>
+      <br />
+    </div>
+  ));
 
   return (
     <div>
