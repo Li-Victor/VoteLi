@@ -6,6 +6,7 @@ export default {
     makeNewPoll: newPollInfo => axios.post('/api/poll', { newPollInfo })
   },
   poll: {
-    getPolls: () => axios.get('/api/poll').then(res => res.data)
+    getPolls: () => axios.get('/api/poll').then(res => res.data),
+    getPollById: id => axios.get(`/api/poll/${id}`).then(res => res.data)
   }
 };

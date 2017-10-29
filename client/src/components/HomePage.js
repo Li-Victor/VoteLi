@@ -6,14 +6,14 @@ class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
+      loading: true,
       polls: []
     };
   }
 
   componentDidMount() {
     api.poll.getPolls().then((polls) => {
-      this.setState({ loading: true, polls });
+      this.setState({ loading: false, polls });
     });
   }
 
@@ -29,8 +29,8 @@ class HomePage extends React.Component {
     ));
     return (
       <div>
-        {!loading && <p>Loading...</p>}
-        {loading && pollLinks}
+        {loading && <p>Loading...</p>}
+        {!loading && pollLinks}
       </div>
     );
   }
