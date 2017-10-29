@@ -6,25 +6,35 @@ class PollPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      loading: true,
+      pollInfo: []
     };
   }
 
   componentDidMount() {
     const { id } = this.props.match.params;
-    api.poll.getPollById(id).then((res) => {
-      console.log(res);
-      this.setState({ loading: false });
+    api.poll.getPollById(id).then((pollInfo) => {
+      this.setState({ loading: false, pollInfo });
     });
   }
 
   render() {
     const { match } = this.props;
-    const { loading } = this.state;
+    const { loading, pollInfo } = this.state;
+    const choices = pollInfo.map(choice => (
+      <p key={choice.choicesid}>
+        Option: {choice.option} Votes: {choice.votes}
+      </p>
+    ));
     return (
       <div>
         {loading && <p>Poll Page for pollid: {match.params.id}</p>}
-        {!loading && <p>Done searching</p>}
+        {!loading && (
+          <div>
+            <h1>{pollInfo[0].topic}</h1>
+            {choices}
+          </div>
+        )}
       </div>
     );
   }
