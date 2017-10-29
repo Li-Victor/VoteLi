@@ -20,16 +20,13 @@ router.get('/:pollid', (req, res) => {
   const db = req.app.get('db');
   const pollid = Number(req.params.pollid);
 
-  db.poll
-    .findOne({
-      pollid
-    })
-    .then((poll) => {
-      if (poll) {
-        return res.status(200).send(poll);
-      }
-      return res.status(404).send('this poll does not exist');
-    });
+  db.getPollById([pollid]).then((poll) => {
+    console.log(poll);
+    if (poll) {
+      return res.status(200).send(poll);
+    }
+    return res.status(404).send('this poll does not exist');
+  });
 });
 
 // makes a couple of requsts
