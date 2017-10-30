@@ -1,26 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Validator from 'validator';
 import api from '../api';
 
 class PollPage extends React.Component {
   constructor(props) {
     super(props);
+    const pollid = this.props.match.params.id;
     this.state = {
       loading: true,
-      pollInfo: []
+      pollInfo: [],
+      error: !Validator.isNumeric(pollid),
+      pollid
     };
   }
 
   componentDidMount() {
-    const { id } = this.props.match.params;
-    api.poll.getPollById(id).then((pollInfo) => {
-      this.setState({ loading: false, pollInfo });
-    });
+    const { error, pollid } = this.state;
+    if (!error) {
+      api.poll.getPollById(pollid).then((pollInfo) => {
+        this.setState({ loading: false, pollInfo });
+      });
+    }
   }
 
   render() {
-    const { match } = this.props;
-    const { loading, pollInfo } = this.state;
+    const { loading, pollInfo, pollid, error } = this.state;
     const choices = pollInfo.map(choice => (
       <p key={choice.choicesid}>
         Option: {choice.option} Votes: {choice.votes}
@@ -28,13 +33,15 @@ class PollPage extends React.Component {
     ));
     return (
       <div>
-        {loading && <p>Poll Page for pollid: {match.params.id}</p>}
-        {!loading && (
-          <div>
-            <h1>{pollInfo[0].topic}</h1>
-            {choices}
-          </div>
-        )}
+        {error && <h1>This poll does not exist</h1>}
+        {loading && !error && <p>Loading Poll Page for pollid: {pollid}...</p>}
+        {!loading &&
+          !error && (
+            <div>
+              <h1>{pollInfo[0].topic}</h1>
+              {choices}
+            </div>
+          )}
       </div>
     );
   }
