@@ -32,6 +32,10 @@ class PollPage extends React.Component {
     }
   }
 
+  vote = (e) => {
+    console.log(e.target.name);
+  };
+
   render() {
     const { loading, pollInfo, pollid, error } = this.state;
     const chartData = {
@@ -42,9 +46,14 @@ class PollPage extends React.Component {
       chartData.labels.push(choice.option);
       chartData.votes.push(choice.votes);
       return (
-        <p key={choice.choicesid}>
-          Option: {choice.option} Votes: {choice.votes}
-        </p>
+        <div key={choice.choicesid}>
+          <p>
+            Option: {choice.option} Votes: {choice.votes}
+          </p>
+          <button name={choice.option} onClick={this.vote}>
+            Vote!
+          </button>
+        </div>
       );
     });
 
