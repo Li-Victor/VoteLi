@@ -5,11 +5,14 @@
   "main": "server.js",
   "scripts": {
     "build": "yarn && cd client && yarn && cd..",
-    "prod": "cd client && yarn build && cd .. && node --require dotenv/config --require babel-register server/app.js",
-    "server": "nodemon --ignore client/ --exec node --require dotenv/config --require babel-register server/app.js",
+    "prod":
+      "cd client && yarn build && cd .. && node --require dotenv/config --require babel-register server/app.js",
+    "server":
+      "nodemon --ignore client/ --exec node --require dotenv/config --require babel-register server/app.js",
     "client": "cd client && yarn start",
     "dev": "concurrently \"yarn run server\" \"yarn run client\"",
-    "lint": "eslint server client/src"
+    "lint": "eslint server client/src",
+    "heroku-postbuild": "cd client && yarn --production=false && yarn run build"
   },
   "repository": {
     "type": "git",

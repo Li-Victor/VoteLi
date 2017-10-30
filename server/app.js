@@ -39,12 +39,12 @@ app.get(
   '/login/facebook/return',
   passport.authenticate('facebook', {
     // run in production
-    // successRedirect: '/',
-    // failureRedirect: '/'
+    successRedirect: '/',
+    failureRedirect: '/'
 
     // run in development
-    successRedirect: 'http://localhost:3000',
-    failureRedirect: 'http://localhost:3000'
+    // successRedirect: 'http://localhost:3000',
+    // failureRedirect: 'http://localhost:3000'
   })
 );
 
