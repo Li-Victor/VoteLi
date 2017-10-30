@@ -18,14 +18,18 @@ router.get('/', (req, res) => {
 // gets the poll by id
 router.get('/:pollid', (req, res) => {
   const db = req.app.get('db');
-  const pollid = Number(req.params.pollid);
+  let pollid = req.params.pollid;
 
-  db.getPollById([pollid]).then((poll) => {
-    console.log(poll);
-    if (poll) {
+  if (!Validator.isNumeric(pollid)) {
+    return res.status(404).send('This poll does not exist');
+  }
+
+  pollid = Validator.toInt(pollid);
+  return db.getPollById([pollid]).then((poll) => {
+    if (poll.length >= 2) {
       return res.status(200).send(poll);
     }
-    return res.status(404).send('this poll does not exist');
+    return res.status(404).send('This poll does not exist');
   });
 });
 

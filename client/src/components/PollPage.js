@@ -18,9 +18,14 @@ class PollPage extends React.Component {
   componentDidMount() {
     const { error, pollid } = this.state;
     if (!error) {
-      api.poll.getPollById(pollid).then((pollInfo) => {
-        this.setState({ loading: false, pollInfo });
-      });
+      api.poll
+        .getPollById(pollid)
+        .then((pollInfo) => {
+          this.setState({ loading: false, pollInfo });
+        })
+        .catch(() => {
+          this.setState({ loading: false, error: true });
+        });
     }
   }
 
