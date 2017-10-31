@@ -1,1 +1,1 @@
-web: node --require babel-register server/app.js
+web: node -r dotenv/config -r babel-register dist/app.js

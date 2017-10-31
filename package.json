@@ -6,13 +6,14 @@
   "scripts": {
     "build": "yarn && cd client && yarn && cd..",
     "prod":
-      "cd client && yarn build && cd .. && node --require dotenv/config --require babel-register server/app.js",
+      "babel server -d dist --presets env --copy-files && cd client && yarn build && cd .. && node -r dotenv/config -r babel-register dist/app.js",
     "server":
-      "nodemon --ignore client/ --exec node --require dotenv/config --require babel-register server/app.js",
+      "nodemon --ignore client/ --exec node -r dotenv/config -r babel-register server/app.js",
     "client": "cd client && yarn start",
     "dev": "concurrently \"yarn run server\" \"yarn run client\"",
     "lint": "eslint server client/src",
-    "heroku-postbuild": "cd client && yarn --production=false && yarn run build"
+    "heroku-postbuild":
+      "babel server -d dist --presets env && cd client && yarn --production=false && yarn run build"
   },
   "repository": {
     "type": "git",
