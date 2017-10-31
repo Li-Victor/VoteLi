@@ -22,7 +22,7 @@ passport.use(
     {
       clientID: process.env.FB_CLIENT_ID,
       clientSecret: process.env.FB_CLIENT_SECRET,
-      callbackURL: `${process.env.REDIRECT_DOMAIN}/facebook/return`,
+      callbackURL: `${process.env.REDIRECT_DOMAIN}/login/facebook/return`,
       profileFields: ['id', 'displayName'],
       passReqToCallback: true
     },
