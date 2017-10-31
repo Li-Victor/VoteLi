@@ -24,3 +24,11 @@ CREATE TABLE choices (
     votes INT NOT NULL DEFAULT 0,
     FOREIGN KEY (pollid) REFERENCES poll(pollid) ON DELETE CASCADE
 );
+
+CREATE TABLE "session" (
+  "sid" varchar NOT NULL COLLATE "default",
+	"sess" json NOT NULL,
+	"expire" timestamp(6) NOT NULL
+)
+WITH (OIDS=FALSE);
+ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
