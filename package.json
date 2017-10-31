@@ -5,15 +5,12 @@
   "main": "server.js",
   "scripts": {
     "build": "yarn && cd client && yarn && cd..",
-    "prod":
-      "babel server -d dist --presets env --copy-files && cd client && yarn build && cd .. && node -r dotenv/config -r babel-register dist/app.js",
-    "server":
-      "nodemon --ignore client/ --exec node -r dotenv/config -r babel-register server/app.js",
+    "prod": "babel server -d dist --presets env --copy-files && cd client && yarn build && cd .. && node -r dotenv/config -r babel-register dist/app.js",
+    "server": "nodemon --ignore client/ --exec node -r dotenv/config -r babel-register server/app.js",
     "client": "cd client && yarn start",
     "dev": "concurrently \"yarn run server\" \"yarn run client\"",
     "lint": "eslint server client/src",
-    "heroku-postbuild":
-      "babel server -d dist --presets env && cd client && yarn --production=false && yarn run build"
+    "heroku-postbuild": "babel server -d dist --presets env && cd client && yarn --production=false && yarn run build"
   },
   "repository": {
     "type": "git",
@@ -31,6 +28,7 @@
     "babel-preset-env": "^1.6.0",
     "body-parser": "^1.17.2",
     "concurrently": "^3.5.0",
+    "connect-pg-simple": "^4.2.1",
     "cookie-parser": "^1.4.3",
     "dotenv": "^4.0.0",
     "express": "^4.15.4",

@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import path from 'path';
+import connectPgSimple from 'connect-pg-simple';
 
 import './config/passport';
 import dbConnection from './models/dbConnection';
@@ -19,6 +20,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
   session({
+    store: new (connectPgSimple(session))({
+      conString: process.env.DB_URI
+    }),
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
