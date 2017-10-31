@@ -11,6 +11,7 @@ import dbConnection from './models/dbConnection';
 import poll from './routes/poll';
 import auth from './routes/auth';
 import error from './routes/error';
+import facebookRedirect from './utils/facebookRedirect';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -40,18 +41,7 @@ app.use(express.static(path.join(__dirname, '../client/build')));
 
 // passport-Facebook login
 app.get('/login/facebook', passport.authenticate('facebook'));
-app.get(
-  '/login/facebook/return',
-  passport.authenticate('facebook', {
-    // run in production
-    successRedirect: '/',
-    failureRedirect: '/'
-
-    // run in development
-    // successRedirect: 'http://localhost:3000',
-    // failureRedirect: 'http://localhost:3000'
-  })
-);
+app.get('/login/facebook/return', passport.authenticate('facebook', facebookRedirect()));
 
 // all routing
 app.use('/auth', auth);
