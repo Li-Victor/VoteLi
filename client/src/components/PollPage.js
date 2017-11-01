@@ -14,7 +14,10 @@ class PollPage extends React.Component {
       loading: true,
       pollInfo: [],
       error: !Validator.isNumeric(pollid),
-      pollid
+      pollid,
+      topic: '',
+      selectValue: '',
+      colors: []
     };
   }
 
@@ -24,7 +27,13 @@ class PollPage extends React.Component {
       api.poll
         .getPollById(pollid)
         .then((pollInfo) => {
-          this.setState({ loading: false, pollInfo });
+          this.setState({
+            loading: false,
+            pollInfo,
+            topic: pollInfo[0].topic,
+            selectValue: pollInfo[0].option,
+            colors: randomColor({ count: pollInfo.length })
+          });
         })
         .catch(() => {
           this.setState({ loading: false, error: true });
@@ -32,12 +41,18 @@ class PollPage extends React.Component {
     }
   }
 
-  vote = (e) => {
-    console.log(e.target.name);
+  handleChange = (e) => {
+    e.preventDefault();
+    this.setState({ selectValue: e.target.value });
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(this.state.selectValue);
   };
 
   render() {
-    const { loading, pollInfo, pollid, error } = this.state;
+    const { loading, pollInfo, pollid, error, value, colors, topic } = this.state;
     const chartData = {
       labels: [],
       votes: []
@@ -46,18 +61,11 @@ class PollPage extends React.Component {
       chartData.labels.push(choice.option);
       chartData.votes.push(choice.votes);
       return (
-        <div key={choice.choicesid}>
-          <p>
-            Option: {choice.option} Votes: {choice.votes}
-          </p>
-          <button name={choice.option} onClick={this.vote}>
-            Vote!
-          </button>
-        </div>
+        <option key={choice.choicesid} value={choice.option}>
+          {choice.option}
+        </option>
       );
     });
-
-    const colors = randomColor({ count: 3 });
 
     const data = {
       labels: chartData.labels,
@@ -77,8 +85,16 @@ class PollPage extends React.Component {
         {!loading &&
           !error && (
             <div>
-              {choices}
-              <h2>{pollInfo[0].topic}</h2>
+              <form onSubmit={this.handleSubmit}>
+                <label htmlFor="vote">
+                  I&apos;d like to vote for ...
+                  <select value={value} onChange={this.handleChange}>
+                    {choices}
+                  </select>
+                </label>
+                <input type="submit" id="vote" value="Vote!" />
+              </form>
+              <h2>{topic}</h2>
               <Doughnut data={data} />
             </div>
           )}
