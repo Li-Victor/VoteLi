@@ -7,6 +7,7 @@ export default {
   },
   poll: {
     getPolls: () => axios.get('/api/poll').then(res => res.data),
-    getPollById: id => axios.get(`/api/poll/${id}`).then(res => res.data)
+    getPollById: id => axios.get(`/api/poll/${id}`).then(res => res.data),
+    vote: (pollid, option) => axios.put(`/api/poll/${pollid}`, { option })
   }
 };

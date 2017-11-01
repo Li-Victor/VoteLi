@@ -117,23 +117,21 @@ router.post('/:pollid/option', isAuthenticated, (req, res) => {
 
 // PUT /api/poll/:pollid
 // casts a vote to a particular poll and also logs the user's ip
-router.put('/:pollid', isAuthenticated, (req, res) => {
+router.put('/:pollid', (req, res) => {
   const db = req.app.get('db');
-  const pollid = Number(req.params.pollid);
-  const option = req.query.option;
+  let pollid = req.params.pollid;
 
-  db
+  if (!Validator.isNumeric(pollid)) {
+    return res.status(404).send('This poll does not exist');
+  }
+
+  pollid = Validator.toInt(pollid);
+  const option = Validator.escape(req.body.option);
+
+  return db
     .putPollById([pollid, option])
-    .then(() =>
-      // shows all the votes for this poll
-      db.choices.find({
-        pollid
-      })
-    )
-    .then((result) => {
-      console.log(result);
-      return res.status(200).send(`casts a vote to ${option}`);
-    });
+    .then(() => res.status(200).send('casted a vote'))
+    .catch(() => res.status(404).send('error casting a vote'));
 });
 
 // DELETE /api/poll/:id

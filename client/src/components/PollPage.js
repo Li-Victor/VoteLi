@@ -48,7 +48,15 @@ class PollPage extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log(this.state.selectValue);
+    const { pollid, selectValue } = this.state;
+    api.poll
+      .vote(pollid, selectValue)
+      .then(() => {
+        window.location.reload();
+      })
+      .catch(() => {
+        window.location.reload();
+      });
   };
 
   render() {
