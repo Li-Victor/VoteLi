@@ -39,7 +39,8 @@ class NewPollPage extends React.Component {
       this.props
         .makeNewPoll(sanitizedData)
         .then((res) => {
-          console.log(res);
+          this.setState({ loading: false });
+          this.props.history.push(`/poll/${res}`);
         })
         .catch(err => this.setState({ errors: err.response.data.errors, loading: false }));
     }
@@ -107,7 +108,10 @@ class NewPollPage extends React.Component {
 }
 
 NewPollPage.propTypes = {
-  makeNewPoll: PropTypes.func.isRequired
+  makeNewPoll: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired
+  }).isRequired
 };
 
 export default connect(null, { makeNewPoll })(NewPollPage);
