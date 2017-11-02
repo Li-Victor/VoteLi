@@ -3,7 +3,8 @@ import axios from 'axios';
 export default {
   user: {
     login: () => axios.get('/auth/current_user').then(res => res.data),
-    makeNewPoll: newPollInfo => axios.post('/api/poll', { newPollInfo })
+    makeNewPoll: newPollInfo => axios.post('/api/poll', { newPollInfo }),
+    deletePoll: pollid => axios.delete(`/api/poll/${pollid}`)
   },
   poll: {
     getPolls: () => axios.get('/api/poll').then(res => res.data),

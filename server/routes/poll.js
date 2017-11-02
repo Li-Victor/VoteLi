@@ -134,20 +134,25 @@ router.put('/:pollid', (req, res) => {
     .catch(() => res.status(404).send('error casting a vote'));
 });
 
-// DELETE /api/poll/:id
-// deletes a poll by its id
+// DELETE /api/poll/:pollid
+// deletes a poll by its pollid
 router.delete('/:pollid', isAuthenticated, (req, res) => {
   const db = req.app.get('db');
-  const pollid = Number(req.params.pollid);
+  let pollid = req.params.pollid;
 
-  db.poll
+  if (!Validator.isNumeric(pollid)) {
+    return res.status(404).send('This poll does not exist');
+  }
+
+  pollid = Validator.toInt(pollid);
+  const userid = req.user.id;
+
+  return db.poll
     .destroy({
-      pollid
+      pollid,
+      userid
     })
-    .then((result) => {
-      console.log(result[0].question);
-      return res.status(200).send(`Successfully deleted ${result[0].question} poll`);
-    });
+    .then(result => res.status(200).send(`Successfully deleted Poll: ${result[0].topic} poll`));
 });
 
 export default router;
