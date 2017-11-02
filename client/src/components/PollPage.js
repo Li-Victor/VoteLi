@@ -54,8 +54,8 @@ class PollPage extends React.Component {
       .then(() => {
         window.location.reload();
       })
-      .catch(() => {
-        window.location.reload();
+      .catch((err) => {
+        window.alert(err.response.data);
       });
   };
 

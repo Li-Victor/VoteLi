@@ -14,7 +14,7 @@ import error from './routes/error';
 import facebookRedirect from './utils/facebookRedirect';
 
 const app = express();
-app.set('trust proxy', 1);
+app.enable('trust proxy');
 
 app.use(cookieParser());
 app.use(bodyParser.json());

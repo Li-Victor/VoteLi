@@ -127,10 +127,19 @@ router.put('/:pollid', (req, res) => {
 
   pollid = Validator.toInt(pollid);
   const option = Validator.escape(req.body.option);
+  const userip = req.ip;
 
-  return db
-    .putPollById([pollid, option])
-    .then(() => res.status(200).send('casted a vote'))
+  return db.log
+    .find({ pollid, userip })
+    .then((result) => {
+      if (result.length === 0) {
+        return db
+          .putPollById([pollid, option])
+          .then(() => db.log.insert({ pollid, userip }))
+          .then(() => res.status(200).send('casted a vote'));
+      }
+      return res.status(404).send('Error: You can only vote once a poll. [user-or-ip-voted]');
+    })
     .catch(() => res.status(404).send('error casting a vote'));
 });
 
