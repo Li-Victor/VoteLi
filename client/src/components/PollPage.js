@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import Validator from 'validator';
 import { Doughnut } from 'react-chartjs-2';
 import randomColor from 'randomcolor';
+import { connect } from 'react-redux';
 
 import api from '../api';
+import isEmptyObject from '../utils/isEmptyObject';
 
 class PollPage extends React.Component {
   constructor(props) {
@@ -98,6 +100,9 @@ class PollPage extends React.Component {
                   I&apos;d like to vote for ...
                   <select value={value} onChange={this.handleChange}>
                     {choices}
+                    {!isEmptyObject(this.props.user) && (
+                      <option>I&apos;d like a custom option</option>
+                    )}
                   </select>
                 </label>
                 <input type="submit" id="vote" value="Vote!" />
@@ -116,7 +121,16 @@ PollPage.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string.isRequired
     }).isRequired
+  }).isRequired,
+  user: PropTypes.shape({
+    displayname: PropTypes.string
   }).isRequired
 };
 
-export default PollPage;
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  };
+}
+
+export default connect(mapStateToProps)(PollPage);
