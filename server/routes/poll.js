@@ -163,13 +163,28 @@ router.delete('/:pollid', isAuthenticated, (req, res) => {
 
   pollid = Validator.toInt(pollid);
   const userid = req.user.id;
+  const { displayname } = req.user;
 
   return db.poll
     .destroy({
       pollid,
       userid
     })
-    .then(result => res.status(200).send(`Successfully deleted Poll: ${result[0].topic} poll`));
+    .then(() =>
+      db.poll
+        .find({
+          userid
+        })
+        .then(polls =>
+          res.json({
+            user: {
+              id: userid,
+              displayname,
+              polls
+            }
+          })
+        )
+    );
 });
 
 export default router;

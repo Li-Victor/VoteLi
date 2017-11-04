@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import api from '../api';
+import { deletePoll } from '../actions/user';
 
-const MyPollsPage = ({ polls }) => {
-  const deletePoll = (e) => {
+const MyPollsPage = ({ polls, dp }) => {
+  const removePoll = (e) => {
     if (window.confirm('Are you sure you want to remove this poll?')) {
       const pollid = e.target.id;
 
-      api.user.deletePoll(pollid).then(() => {
+      dp(pollid).then(() => {
         window.location.reload();
       });
     }
@@ -21,7 +21,7 @@ const MyPollsPage = ({ polls }) => {
       <Link key={poll.pollid} to={`/poll/${poll.pollid}`}>
         {poll.topic}
       </Link>
-      <button id={poll.pollid} onClick={deletePoll}>
+      <button id={poll.pollid} onClick={removePoll}>
         Delete!
       </button>
       <br />
@@ -43,7 +43,8 @@ MyPollsPage.propTypes = {
       topic: PropTypes.string,
       userid: PropTypes.string
     })
-  ).isRequired
+  ).isRequired,
+  dp: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
@@ -52,4 +53,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(MyPollsPage);
+export default connect(mapStateToProps, { dp: deletePoll })(MyPollsPage);

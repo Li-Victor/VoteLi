@@ -13,3 +13,8 @@ export const makeNewPoll = newPollInfo => dispatch =>
     dispatch(fetchUser(res.data.user));
     return res.data.pollid;
   });
+
+export const deletePoll = pollid => dispatch =>
+  api.user.deletePoll(pollid).then((res) => {
+    dispatch(fetchUser(res.data.user));
+  });

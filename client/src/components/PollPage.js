@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import api from '../api';
 import isEmptyObject from '../utils/isEmptyObject';
+import { deletePoll } from '../actions/user';
 
 class PollPage extends React.Component {
   constructor(props) {
@@ -93,8 +94,8 @@ class PollPage extends React.Component {
     if (window.confirm('Are you sure you want to remove this poll?')) {
       const pollid = e.target.id;
 
-      api.user.deletePoll(pollid).then(() => {
-        this.props.history.push('/');
+      this.props.deletePoll(pollid).then(() => {
+        this.props.history.push('/mypolls');
       });
     }
   };
@@ -205,6 +206,7 @@ PollPage.propTypes = {
       })
     )
   }).isRequired,
+  deletePoll: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired
   }).isRequired
@@ -216,4 +218,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(PollPage);
+export default connect(mapStateToProps, { deletePoll })(PollPage);
