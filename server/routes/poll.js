@@ -129,18 +129,32 @@ router.put('/:pollid', (req, res) => {
   const option = Validator.escape(req.body.option);
   const userip = req.ip;
 
-  return db.log
-    .find({ pollid, userip })
-    .then((result) => {
-      if (result.length === 0) {
-        return db
-          .putPollById([pollid, option])
-          .then(() => db.log.insert({ pollid, userip }))
-          .then(() => res.status(200).send('casted a vote'));
-      }
-      return res.status(404).send('Error: You can only vote once a poll. [user-or-ip-voted]');
-    })
-    .catch(() => res.status(404).send('error casting a vote'));
+  return (
+    db.log
+      .find({ pollid, userip })
+      // see if user has voted from the logs
+      .then((result) => {
+        if (result.length === 0) {
+          // checks if there is an option for that poll. If not, insert new row
+          // after checking, add to log the userip
+          return db.choices.find({ pollid, option }).then((findResult) => {
+            if (findResult.length === 0) {
+              return db.choices
+                .insert({ pollid, option, votes: 1 })
+                .then(() => db.log.insert({ pollid, userip }))
+                .then(() => res.status(200).send('casted a vote'));
+            }
+
+            return db
+              .putPollById([pollid, option])
+              .then(() => db.log.insert({ pollid, userip }))
+              .then(() => res.status(200).send('casted a vote'));
+          });
+        }
+        return res.status(404).send('Error: You can only vote once a poll. [user-or-ip-voted]');
+      })
+      .catch(() => res.status(404).send('error casting a vote'))
+  );
 });
 
 // DELETE /api/poll/:pollid

@@ -28,6 +28,7 @@ class PollPage extends React.Component {
   componentDidMount() {
     const { error, pollid } = this.state;
     if (!error) {
+      // request to get the poll
       api.poll
         .getPollById(pollid)
         .then((pollInfo) => {
