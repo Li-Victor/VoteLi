@@ -14,6 +14,7 @@ CREATE TABLE log (
     logid SERIAL NOT NULL PRIMARY KEY,
     pollid SERIAL NOT NULL,
     userip TEXT NOT NULL,
+    userid TEXT,
     FOREIGN KEY (pollid) REFERENCES poll(pollid) ON DELETE CASCADE
 );
 

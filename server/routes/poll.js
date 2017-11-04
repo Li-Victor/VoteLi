@@ -91,30 +91,6 @@ router.post('/', isAuthenticated, (req, res) => {
   return responseNewPoll(db, topic, options, userid, req, res);
 });
 
-// POST /api/poll/:pollid/option
-// adds a new option to a poll determined by the id
-router.post('/:pollid/option', isAuthenticated, (req, res) => {
-  const db = req.app.get('db');
-  const pollid = Number(req.params.pollid);
-  const option = req.query.option;
-
-  db.choices
-    .insert({
-      pollid,
-      option
-    })
-    .then(() =>
-      // shows all the votes for this poll
-      db.choices.find({
-        pollid
-      })
-    )
-    .then((result) => {
-      console.log(result);
-      return res.status(200).send("new option for a poll. Redirect to this poll's page");
-    });
-});
-
 // PUT /api/poll/:pollid
 // casts a vote to a particular poll and also logs the user's ip
 router.put('/:pollid', (req, res) => {
@@ -129,32 +105,44 @@ router.put('/:pollid', (req, res) => {
   const option = Validator.escape(req.body.option);
   const userip = req.ip;
 
-  return (
-    db.log
-      .find({ pollid, userip })
-      // see if user has voted from the logs
-      .then((result) => {
-        if (result.length === 0) {
-          // checks if there is an option for that poll. If not, insert new row
-          // after checking, add to log the userip
-          return db.choices.find({ pollid, option }).then((findResult) => {
-            if (findResult.length === 0) {
-              return db.choices
-                .insert({ pollid, option, votes: 1 })
-                .then(() => db.log.insert({ pollid, userip }))
-                .then(() => res.status(200).send('casted a vote'));
-            }
-
-            return db
-              .putPollById([pollid, option])
-              .then(() => db.log.insert({ pollid, userip }))
+  // if user is logged in for voting, then check choices table for userid
+  // if user is not logged in for voting, then check choices table for userip
+  if (req.isAuthenticated()) {
+    const userid = req.user.id;
+    // see if user with userid has voted from the logs
+    return db.log.find({ pollid, userid }).then((logResult) => {
+      // checks if there is an option for that poll. If not, insert new row
+      // after checking, add to log the userip
+      if (logResult.length === 0) {
+        return db.choices.find({ pollid, option }).then((findResult) => {
+          if (findResult.length === 0) {
+            return db.choices
+              .insert({ pollid, option, votes: 1 })
+              .then(() => db.log.insert({ pollid, userid, userip }))
               .then(() => res.status(200).send('casted a vote'));
-          });
-        }
-        return res.status(404).send('Error: You can only vote once a poll. [user-or-ip-voted]');
-      })
-      .catch(() => res.status(404).send('error casting a vote'))
-  );
+          }
+
+          return db
+            .putPollById([pollid, option])
+            .then(() => db.log.insert({ pollid, userid, userip }))
+            .then(() => res.status(200).send('casted a vote'));
+        });
+      }
+      return res.status(404).send('Error: You can only vote once a poll. [user-or-ip-voted]');
+    });
+  }
+
+  // casting a vote when not logged in
+  // less lines of code because we are not checking for custom options
+  return db.log.find({ pollid, userip }).then((logResult) => {
+    if (logResult.length === 0) {
+      return db
+        .putPollById([pollid, option])
+        .then(() => db.log.insert({ pollid, userip }))
+        .then(() => res.status(200).send('casted a vote'));
+    }
+    return res.status(404).send('Error: You can only vote once a poll. [user-or-ip-voted]');
+  });
 });
 
 // DELETE /api/poll/:pollid
