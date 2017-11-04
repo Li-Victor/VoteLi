@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   session({
     store: new (connectPgSimple(session))({
-      conString: process.env.DB_URI
+      conString: process.env.DATABASE_URL
     }),
     secret: process.env.SESSION_SECRET,
     resave: false,
