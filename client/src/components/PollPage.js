@@ -49,7 +49,7 @@ class PollPage extends React.Component {
     e.preventDefault();
     const customSelectOpion = e.target.selectedIndex - 1 === this.state.pollInfo.length;
     this.setState({
-      selectValue: customSelectOpion ? '' : e.target.value,
+      selectValue: customSelectOpion ? 'custom' : e.target.value,
       customOption: customSelectOpion
     });
   };
@@ -137,7 +137,7 @@ class PollPage extends React.Component {
                     </option>
                     {choices}
                     {!isEmptyObject(this.props.user) && (
-                      <option>I&apos;d like a custom option</option>
+                      <option value="custom">I&apos;d like a custom option</option>
                     )}
                   </select>
                 </label>
