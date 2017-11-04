@@ -110,39 +110,45 @@ router.put('/:pollid', (req, res) => {
   if (req.isAuthenticated()) {
     const userid = req.user.id;
     // see if user with userid has voted from the logs
-    return db.log.find({ pollid, userid }).then((logResult) => {
-      // checks if there is an option for that poll. If not, insert new row
-      // after checking, add to log the userip
-      if (logResult.length === 0) {
-        return db.choices.find({ pollid, option }).then((findResult) => {
-          if (findResult.length === 0) {
-            return db.choices
-              .insert({ pollid, option, votes: 1 })
+    return db.log
+      .find({ pollid, userid })
+      .then((logResult) => {
+        // checks if there is an option for that poll. If not, insert new row
+        // after checking, add to log the userip
+        if (logResult.length === 0) {
+          return db.choices.find({ pollid, option }).then((findResult) => {
+            if (findResult.length === 0) {
+              return db.choices
+                .insert({ pollid, option, votes: 1 })
+                .then(() => db.log.insert({ pollid, userid, userip }))
+                .then(() => res.status(200).send('casted a vote'));
+            }
+
+            return db
+              .putPollById([pollid, option])
               .then(() => db.log.insert({ pollid, userid, userip }))
               .then(() => res.status(200).send('casted a vote'));
-          }
-
-          return db
-            .putPollById([pollid, option])
-            .then(() => db.log.insert({ pollid, userid, userip }))
-            .then(() => res.status(200).send('casted a vote'));
-        });
-      }
-      return res.status(404).send('Error: You can only vote once a poll. [user-or-ip-voted]');
-    });
+          });
+        }
+        return res.status(404).send('Error: You can only vote once a poll. [user-or-ip-voted]');
+      })
+      .catch(() => res.status(404).send('This poll does not exist'));
   }
 
   // casting a vote when not logged in
   // less lines of code because we are not checking for custom options
-  return db.log.find({ pollid, userip }).then((logResult) => {
-    if (logResult.length === 0) {
-      return db
-        .putPollById([pollid, option])
-        .then(() => db.log.insert({ pollid, userip }))
-        .then(() => res.status(200).send('casted a vote'));
-    }
-    return res.status(404).send('Error: You can only vote once a poll. [user-or-ip-voted]');
-  });
+  return db.log
+    .find({ pollid, userip })
+    .then((logResult) => {
+      if (logResult.length === 0) {
+        return db
+          .putPollById([pollid, option])
+          .then(() => db.log.insert({ pollid, userip }))
+          .then(() => res.status(200).send('casted a vote'));
+      }
+      return res.status(404).send('Error: You can only vote once a poll. [user-or-ip-voted]');
+    })
+    .catch(() => res.status(404).send('This poll does not exist'));
 });
 
 // DELETE /api/poll/:pollid

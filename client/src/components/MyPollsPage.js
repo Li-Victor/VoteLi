@@ -43,14 +43,12 @@ MyPollsPage.propTypes = {
       topic: PropTypes.string,
       userid: PropTypes.string
     })
-  ).isRequired,
-  userid: PropTypes.string.isRequired
+  ).isRequired
 };
 
 function mapStateToProps(state) {
   return {
-    polls: state.user.polls,
-    userid: state.user.id
+    polls: state.user.polls
   };
 }
 

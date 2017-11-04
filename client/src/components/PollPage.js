@@ -12,6 +12,10 @@ class PollPage extends React.Component {
   constructor(props) {
     super(props);
     const pollid = this.props.match.params.id;
+    const ownUserPoll =
+      !isEmptyObject(this.props.user) &&
+      this.props.user.polls.findIndex(poll => poll.pollid === Number(pollid)) !== -1;
+
     this.state = {
       loading: true,
       pollInfo: [],
@@ -21,7 +25,8 @@ class PollPage extends React.Component {
       selectValue: '',
       colors: [],
       customOption: false,
-      customValue: ''
+      customValue: '',
+      ownUserPoll
     };
   }
 
@@ -84,6 +89,16 @@ class PollPage extends React.Component {
     });
   };
 
+  deletePoll = (e) => {
+    if (window.confirm('Are you sure you want to remove this poll?')) {
+      const pollid = e.target.id;
+
+      api.user.deletePoll(pollid).then(() => {
+        this.props.history.push('/');
+      });
+    }
+  };
+
   render() {
     const {
       loading,
@@ -94,7 +109,8 @@ class PollPage extends React.Component {
       topic,
       customOption,
       customValue,
-      selectValue
+      selectValue,
+      ownUserPoll
     } = this.state;
     const chartData = {
       labels: [],
@@ -145,6 +161,7 @@ class PollPage extends React.Component {
                 {customOption &&
                   !isEmptyObject(this.props.user) && (
                     <label htmlFor="customOption">
+                      Vote with my own option:
                       <input
                         type="text"
                         id="customOption"
@@ -159,6 +176,14 @@ class PollPage extends React.Component {
               </form>
               <h2>{topic}</h2>
               <Doughnut data={data} />
+              {!loading &&
+                !error &&
+                !isEmptyObject(this.props.user) &&
+                ownUserPoll && (
+                  <button id={pollid} onClick={this.deletePoll}>
+                    Delete!
+                  </button>
+                )}
             </div>
           )}
       </div>
@@ -173,7 +198,15 @@ PollPage.propTypes = {
     }).isRequired
   }).isRequired,
   user: PropTypes.shape({
-    displayname: PropTypes.string
+    displayname: PropTypes.string,
+    polls: PropTypes.arrayOf(
+      PropTypes.shape({
+        pollid: PropTypes.number
+      })
+    )
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired
   }).isRequired
 };
 
