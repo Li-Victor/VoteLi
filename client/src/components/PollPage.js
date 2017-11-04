@@ -19,7 +19,9 @@ class PollPage extends React.Component {
       pollid,
       topic: '',
       selectValue: '',
-      colors: []
+      colors: [],
+      customOption: false,
+      customValue: ''
     };
   }
 
@@ -33,7 +35,6 @@ class PollPage extends React.Component {
             loading: false,
             pollInfo,
             topic: pollInfo[0].topic,
-            selectValue: pollInfo[0].option,
             colors: randomColor({ count: pollInfo.length })
           });
         })
@@ -45,24 +46,55 @@ class PollPage extends React.Component {
 
   handleChange = (e) => {
     e.preventDefault();
-    this.setState({ selectValue: e.target.value });
+    const customSelectOpion = e.target.selectedIndex - 1 === this.state.pollInfo.length;
+    this.setState({
+      selectValue: customSelectOpion ? '' : e.target.value,
+      customOption: customSelectOpion
+    });
   };
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { pollid, selectValue } = this.state;
-    api.poll
-      .vote(pollid, selectValue)
-      .then(() => {
-        window.location.reload();
-      })
-      .catch((err) => {
-        window.alert(err.response.data);
-      });
+    const { pollid, customOption } = this.state;
+    // selectValue is the value when user picks a custom option
+    const selectValue = customOption
+      ? Validator.escape(this.state.customValue)
+      : Validator.escape(this.state.selectValue);
+
+    // error if select value is empty
+    if (Validator.isEmpty(selectValue)) {
+      if (customOption) window.alert('Your custom voted cannot be empty');
+      else window.alert('You must choose which option to vote for.');
+    } else {
+      api.poll
+        .vote(pollid, selectValue)
+        .then(() => {
+          window.location.reload();
+        })
+        .catch((err) => {
+          window.alert(err.response.data);
+        });
+    }
+  };
+
+  changeCustomValue = (e) => {
+    this.setState({
+      customValue: e.target.value
+    });
   };
 
   render() {
-    const { loading, pollInfo, pollid, error, value, colors, topic } = this.state;
+    const {
+      loading,
+      pollInfo,
+      pollid,
+      error,
+      colors,
+      topic,
+      customOption,
+      customValue,
+      selectValue
+    } = this.state;
     const chartData = {
       labels: [],
       votes: []
@@ -98,13 +130,30 @@ class PollPage extends React.Component {
               <form onSubmit={this.handleSubmit}>
                 <label htmlFor="vote">
                   I&apos;d like to vote for ...
-                  <select value={value} onChange={this.handleChange}>
+                  <select value={selectValue} onChange={this.handleChange}>
+                    <option value="" disabled>
+                      Choose an option....
+                    </option>
                     {choices}
                     {!isEmptyObject(this.props.user) && (
                       <option>I&apos;d like a custom option</option>
                     )}
                   </select>
                 </label>
+
+                {customOption &&
+                  !isEmptyObject(this.props.user) && (
+                    <label htmlFor="customOption">
+                      <input
+                        type="text"
+                        id="customOption"
+                        name="customOption"
+                        value={customValue}
+                        onChange={this.changeCustomValue}
+                      />
+                    </label>
+                  )}
+
                 <input type="submit" id="vote" value="Vote!" />
               </form>
               <h2>{topic}</h2>
