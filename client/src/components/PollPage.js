@@ -100,6 +100,12 @@ class PollPage extends React.Component {
     }
   };
 
+  tweet = () => {
+    const twitterUrl = `https://twitter.com/intent/tweet?text=Help Me Vote! ${window.location
+      .href}`;
+    window.open(twitterUrl);
+  };
+
   render() {
     const {
       loading,
@@ -185,6 +191,7 @@ class PollPage extends React.Component {
                     Delete!
                   </button>
                 )}
+              {!loading && !error && <button onClick={this.tweet}>Share On Twitter</button>}
             </div>
           )}
       </div>
