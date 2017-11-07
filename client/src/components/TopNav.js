@@ -8,7 +8,7 @@ import isEmptyObject from '../utils/isEmptyObject';
 
 const TopNav = ({ user }) => (
   <div>
-    <Menu style={{ marginBottom: '2em' }}>
+    <Menu fixed="top">
       <Container>
         <Menu.Item header href="/">
           VoteLi
