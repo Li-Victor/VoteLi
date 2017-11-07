@@ -11,7 +11,7 @@ import dbConnection from './models/dbConnection';
 import poll from './routes/poll';
 import auth from './routes/auth';
 import error from './routes/error';
-import facebookRedirect from './utils/facebookRedirect';
+import twitterRedirect from './utils/twitterRedirect';
 
 const app = express();
 app.enable('trust proxy');
@@ -40,8 +40,8 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 // passport-Facebook login
-app.get('/login/facebook', passport.authenticate('facebook'));
-app.get('/login/facebook/return', passport.authenticate('facebook', facebookRedirect()));
+app.get('/login/twitter', passport.authenticate('twitter'));
+app.get('/login/twitter/return', passport.authenticate('twitter', twitterRedirect()));
 
 // all routing
 app.use('/auth', auth);

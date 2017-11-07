@@ -1,5 +1,5 @@
 import passport from 'passport';
-import { Strategy as FacebookStrategy } from 'passport-facebook';
+import { Strategy as TwitterStrategy } from 'passport-twitter';
 
 import dbUsers from '../models/users';
 
@@ -18,12 +18,11 @@ passport.deserializeUser((req, id, cb) => {
 });
 
 passport.use(
-  new FacebookStrategy(
+  new TwitterStrategy(
     {
-      clientID: process.env.FB_CLIENT_ID,
-      clientSecret: process.env.FB_CLIENT_SECRET,
-      callbackURL: `${process.env.REDIRECT_DOMAIN}/login/facebook/return`,
-      profileFields: ['id', 'displayName'],
+      consumerKey: process.env.TWITTER_CONSUMER_KEY,
+      consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+      callbackURL: `${process.env.REDIRECT_DOMAIN}/login/twitter/return`,
       passReqToCallback: true
     },
     (req, accessToken, refreshToken, profile, cb) => {

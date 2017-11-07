@@ -11,7 +11,7 @@ const TopNav = ({ user }) => (
       <p>VoteLi</p>
     </Link>
     {isEmptyObject(user) ? (
-      <a href="/login/facebook">Log In with Facebook</a>
+      <a href="/login/twitter">Log In with Twitter</a>
     ) : (
       <div>
         <Link to="/">Home</Link>

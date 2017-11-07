@@ -3,30 +3,25 @@
   "version": "1.0.0",
   "description": "A voting app in which each poll is graphed",
   "main": "server/app.js",
-  "author": "Victor Li <victorli5674@yahoo.com>",
-  "license": "MIT",
+  "author": "Victor Li",
+  "license": "ISC",
   "engines": {
     "node": "8.8.1",
     "npm": "5.4.2"
   },
   "scripts": {
     "build": "yarn && cd client && yarn && cd..",
-    "prod":
-      "babel server -d dist --presets env --copy-files && cd client && yarn build && cd .. && node -r dotenv/config -r babel-register dist/app.js",
-    "server":
-      "nodemon --ignore client/ --exec node -r dotenv/config -r babel-register server/app.js",
+    "prod": "babel server -d dist --presets env --copy-files && cd client && yarn build && cd .. && node -r dotenv/config -r babel-register dist/app.js",
+    "server": "nodemon --ignore client/ --exec node -r dotenv/config -r babel-register server/app.js",
     "client": "cd client && yarn start",
     "dev": "concurrently \"yarn run server\" \"yarn run client\"",
     "lint": "eslint server client/src",
-    "heroku-postbuild":
-      "babel server -d dist --presets env --copy-files && cd client && yarn --production=false && yarn run build"
+    "heroku-postbuild": "babel server -d dist --presets env --copy-files && cd client && yarn --production=false && yarn run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Li-Victor/VoteLi.git"
   },
-  "author": "Victor Li",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/Li-Victor/VoteLi/issues"
   },
@@ -44,7 +39,7 @@
     "express-session": "^1.15.5",
     "massive": "^4.4.0",
     "passport": "^0.4.0",
-    "passport-facebook": "^2.1.1",
+    "passport-twitter": "^1.0.4",
     "validator": "^9.1.1"
   },
   "devDependencies": {
