@@ -22,7 +22,7 @@ const TopNav = ({ user, history }) => {
           {isEmptyObject(user) ? (
             <Menu.Item>
               <Button color="twitter" onClick={() => window.location.replace('/login/twitter')}>
-                <Icon name="twitter" /> Log in with Twitter
+                <Icon name="twitter" /> Sign in with Twitter
               </Button>
             </Menu.Item>
           ) : (
