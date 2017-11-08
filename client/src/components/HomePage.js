@@ -38,14 +38,15 @@ class HomePage extends React.Component {
     ));
     return (
       <Container text style={{ marginTop: '5em' }}>
-        <Header as="h1">
-          <Header.Content>VoteLi</Header.Content>
+        <Header as="h1">VoteLi</Header>
+        <Header as="h3" style={{ marginTop: 0 }}>
+          <Header.Content>Below are polls hosted by VoteLi.</Header.Content>
           <Header.Subheader>
             {isEmptyObject(this.props.user) ? (
               <div>Select a poll to see the results and vote, or sign-in to make a new poll.</div>
             ) : (
               <div>
-                Select a poll to see thre results and vote,{' '}
+                Select a poll to see the results and vote,{' '}
                 <Link to="/newpoll">or make a new poll!</Link>
               </div>
             )}

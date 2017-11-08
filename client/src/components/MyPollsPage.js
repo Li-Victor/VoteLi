@@ -2,48 +2,84 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Button, Container, Header, Icon, Segment } from 'semantic-ui-react';
+import { Button, Confirm, Container, Header, Icon, Segment } from 'semantic-ui-react';
 
 import { deletePoll } from '../actions/user';
 
-const MyPollsPage = ({ polls, dp }) => {
-  const removePoll = (e) => {
-    if (window.confirm('Are you sure you want to remove this poll?')) {
-      const pollid = e.target.id;
+class MyPollsPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openConfirm: false,
+      pollid: undefined
+    };
+  }
 
-      dp(pollid).then(() => {
+  onCancel = () => {
+    this.setState({ openConfirm: false });
+  };
+
+  onConfirm = () => {
+    const { pollid } = this.state;
+    this.setState({ openConfirm: false });
+    if (!(pollid === undefined)) {
+      this.props.dp(pollid).then(() => {
         window.location.reload();
       });
     }
   };
 
-  const pickColor = (index) => {
+  removePoll = (e) => {
+    this.setState({
+      pollid: e.target.id,
+      openConfirm: true
+    });
+  };
+
+  pickColor = (index) => {
     const colors = ['red', 'orange', 'yellow', 'olive', 'teal', 'blue', 'violet', 'purple', 'pink'];
     return colors[index % colors.length];
   };
 
-  const listOfPolls = polls.map((poll, index) => (
-    <Segment color={pickColor(index)} key={poll.pollid}>
-      <Link
-        key={poll.pollid}
-        to={`/poll/${poll.pollid}`}
-        style={{ fontSize: '16px', marginRight: '12px' }}
-      >
-        {poll.topic}
-      </Link>
-      <Button id={poll.pollid} size="mini" negative icon onClick={removePoll}>
-        <Icon name="delete" />
-      </Button>
-    </Segment>
-  ));
+  render() {
+    const listOfPolls = this.props.polls.map((poll, index) => (
+      <Segment color={this.pickColor(index)} key={poll.pollid}>
+        <Link
+          key={poll.pollid}
+          to={`/poll/${poll.pollid}`}
+          style={{ fontSize: '16px', marginRight: '12px' }}
+        >
+          {poll.topic}
+        </Link>
+        <Button id={poll.pollid} size="mini" negative icon onClick={this.removePoll}>
+          <Icon name="delete" />
+        </Button>
+      </Segment>
+    ));
 
-  return (
-    <Container text style={{ marginTop: '5em' }}>
-      <Header as="h1">My Polls</Header>
-      <div>{listOfPolls}</div>
-    </Container>
-  );
-};
+    const { openConfirm } = this.state;
+
+    return (
+      <Container text style={{ marginTop: '5em' }}>
+        <Header as="h1">VoteLi</Header>
+        <Header as="h3" style={{ marginTop: 0 }}>
+          <Header.Content>Below are polls you own.</Header.Content>
+          <Header.Subheader>
+            Select a poll to see the results and vote,{' '}
+            <Link to="/newpoll">or make a new poll!</Link>
+          </Header.Subheader>
+        </Header>
+        <div>{listOfPolls}</div>
+        <Confirm
+          open={openConfirm}
+          content="Are you sure you want to remove this poll?"
+          onCancel={this.onCancel}
+          onConfirm={this.onConfirm}
+        />
+      </Container>
+    );
+  }
+}
 
 MyPollsPage.propTypes = {
   polls: PropTypes.arrayOf(
