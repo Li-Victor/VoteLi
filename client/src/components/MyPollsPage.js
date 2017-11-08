@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Button, Container, Header, Icon, Segment } from 'semantic-ui-react';
 
 import { deletePoll } from '../actions/user';
 
@@ -16,23 +17,31 @@ const MyPollsPage = ({ polls, dp }) => {
     }
   };
 
-  const listOfPolls = polls.map(poll => (
-    <div key={poll.pollid}>
-      <Link key={poll.pollid} to={`/poll/${poll.pollid}`}>
+  const pickColor = (index) => {
+    const colors = ['red', 'orange', 'yellow', 'olive', 'teal', 'blue', 'violet', 'purple', 'pink'];
+    return colors[index % colors.length];
+  };
+
+  const listOfPolls = polls.map((poll, index) => (
+    <Segment color={pickColor(index)} key={poll.pollid}>
+      <Link
+        key={poll.pollid}
+        to={`/poll/${poll.pollid}`}
+        style={{ fontSize: '16px', marginRight: '12px' }}
+      >
         {poll.topic}
       </Link>
-      <button id={poll.pollid} onClick={removePoll}>
-        Delete!
-      </button>
-      <br />
-    </div>
+      <Button id={poll.pollid} size="mini" negative icon onClick={removePoll}>
+        <Icon name="delete" />
+      </Button>
+    </Segment>
   ));
 
   return (
-    <div>
-      <p>My Polls</p>
+    <Container text style={{ marginTop: '5em' }}>
+      <Header as="h1">My Polls</Header>
       <div>{listOfPolls}</div>
-    </div>
+    </Container>
   );
 };
 

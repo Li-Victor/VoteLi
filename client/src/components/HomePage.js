@@ -31,7 +31,7 @@ class HomePage extends React.Component {
     const { loading, polls } = this.state;
     const pollLinks = polls.map((poll, index) => (
       <Segment color={this.pickColor(index)} key={poll.pollid}>
-        <Link key={poll.pollid} to={`/poll/${poll.pollid}`}>
+        <Link key={poll.pollid} to={`/poll/${poll.pollid}`} style={{ fontSize: '16px' }}>
           {poll.topic}
         </Link>
       </Segment>
