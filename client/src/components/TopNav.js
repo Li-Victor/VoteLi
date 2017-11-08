@@ -13,36 +13,34 @@ const TopNav = ({ user, history }) => {
   };
 
   return (
-    <div>
-      <Menu fixed="top">
-        <Container>
-          <Menu.Item header href="/">
-            VoteLi
+    <Menu fixed="top">
+      <Container>
+        <Menu.Item header href="/">
+          VoteLi
+        </Menu.Item>
+        {isEmptyObject(user) ? (
+          <Menu.Item>
+            <Button color="twitter" onClick={() => window.location.replace('/login/twitter')}>
+              <Icon name="twitter" /> Sign in with Twitter
+            </Button>
           </Menu.Item>
-          {isEmptyObject(user) ? (
-            <Menu.Item>
-              <Button color="twitter" onClick={() => window.location.replace('/login/twitter')}>
-                <Icon name="twitter" /> Sign in with Twitter
-              </Button>
+        ) : (
+          <Menu.Menu position="right">
+            <Menu.Item name="mypolls" link onClick={handleItemClick}>
+              My Polls
             </Menu.Item>
-          ) : (
-            <Menu.Menu position="right">
-              <Menu.Item name="mypolls" link onClick={handleItemClick}>
-                My Polls
-              </Menu.Item>
-              <Menu.Item name="newpoll" link onClick={handleItemClick}>
-                New Poll
-              </Menu.Item>
-              <Dropdown text={user.displayname} pointing className="link item">
-                <Dropdown.Menu>
-                  <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </Menu.Menu>
-          )}
-        </Container>
-      </Menu>
-    </div>
+            <Menu.Item name="newpoll" link onClick={handleItemClick}>
+              New Poll
+            </Menu.Item>
+            <Dropdown text={user.displayname} pointing className="link item">
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Menu.Menu>
+        )}
+      </Container>
+    </Menu>
   );
 };
 
