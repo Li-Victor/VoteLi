@@ -4,6 +4,7 @@ import Validator from 'validator';
 import { Doughnut } from 'react-chartjs-2';
 import randomColor from 'randomcolor';
 import { connect } from 'react-redux';
+import { Container } from 'semantic-ui-react';
 
 import api from '../api';
 import isEmptyObject from '../utils/isEmptyObject';
@@ -145,7 +146,7 @@ class PollPage extends React.Component {
     };
 
     return (
-      <div>
+      <Container style={{ marginTop: '5em' }}>
         {error && <h1>This poll does not exist</h1>}
         {loading && !error && <p>Loading Poll Page for pollid: {pollid}...</p>}
         {!loading &&
@@ -194,7 +195,7 @@ class PollPage extends React.Component {
               {!loading && !error && <button onClick={this.tweet}>Share On Twitter</button>}
             </div>
           )}
-      </div>
+      </Container>
     );
   }
 }
