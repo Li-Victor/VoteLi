@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Validator from 'validator';
 import { connect } from 'react-redux';
+import { Button, Container, Form, Header, Message, TextArea } from 'semantic-ui-react';
 
 import isEmptyObject from '../utils/isEmptyObject';
 import { makeNewPoll } from '../actions/user';
@@ -66,43 +67,50 @@ class NewPollPage extends React.Component {
   render() {
     const { data, errors, loading } = this.state;
     return (
-      <div>
-        {loading && <p>Loading...</p>}
-        {!loading && (
-          <div>
-            <h1>Make a new poll!</h1>
-            <form onSubmit={this.handleSubmit}>
-              {errors.global && <h2>{errors.global}</h2>}
-              <label htmlFor="topic">
-                Topic:
-                <input
-                  type="text"
-                  id="topic"
-                  name="topic"
-                  value={data.topic}
-                  onChange={this.onChange}
-                />
-              </label>
-              {errors.topic && <h3>{errors.topic}</h3>}
-              <br />
+      <Container text style={{ marginTop: '5em' }}>
+        <Header as="h1" disabled={loading}>
+          Make a new poll!
+        </Header>
+        <Form onSubmit={this.handleSubmit} loading={loading}>
+          {errors.global && <h2>{errors.global}</h2>}
+          <Form.Field required>
+            <label htmlFor="topic">Topic:</label>
+            <input
+              type="text"
+              id="topic"
+              name="topic"
+              value={data.topic}
+              onChange={this.onChange}
+            />
+          </Form.Field>
+          {errors.topic && (
+            <Message negative>
+              <Message.Header>{errors.topic}</Message.Header>
+            </Message>
+          )}
 
-              <label htmlFor="options">
-                Options (seperated by line):
-                <textarea
-                  id="options"
-                  name="options"
-                  value={data.options}
-                  onChange={this.onChange}
-                />
-              </label>
-              {errors.options && <h3>{errors.options}</h3>}
-              <br />
+          <Form.Field
+            id="options"
+            name="options"
+            control={TextArea}
+            label="Options (seperated by line):"
+            value={data.options}
+            onChange={this.onChange}
+            autoHeight
+            rows={2}
+            required
+          />
+          {errors.options && (
+            <Message negative>
+              <Message.Header>{errors.options}</Message.Header>
+            </Message>
+          )}
 
-              <input type="submit" value="Make!" />
-            </form>
-          </div>
-        )}
-      </div>
+          <Button primary type="submit">
+            Make
+          </Button>
+        </Form>
+      </Container>
     );
   }
 }
