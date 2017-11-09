@@ -49,7 +49,7 @@ class NewPollPage extends React.Component {
 
   validate = (data) => {
     const errors = {};
-    if (Validator.isEmpty(data.topic)) errors.topic = 'Your poll needs a title!';
+    if (Validator.isEmpty(data.topic)) errors.topic = 'Your poll needs a topic!';
 
     const allOptions = data.options.split('\n');
     if (allOptions.length < 2) errors.options = 'You need 2 or more options to make a poll!';
