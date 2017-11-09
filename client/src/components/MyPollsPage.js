@@ -43,7 +43,7 @@ class MyPollsPage extends React.Component {
 
   render() {
     const listOfPolls = this.props.polls.map((poll, index) => (
-      <Segment color={this.pickColor(index)} key={poll.pollid}>
+      <Segment color={this.pickColor(index)} textAlign="center" key={poll.pollid}>
         <Link
           key={poll.pollid}
           to={`/poll/${poll.pollid}`}

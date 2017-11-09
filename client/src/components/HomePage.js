@@ -30,12 +30,13 @@ class HomePage extends React.Component {
   render() {
     const { loading, polls } = this.state;
     const pollLinks = polls.map((poll, index) => (
-      <Segment color={this.pickColor(index)} key={poll.pollid}>
+      <Segment color={this.pickColor(index)} textAlign="center" key={poll.pollid}>
         <Link key={poll.pollid} to={`/poll/${poll.pollid}`} style={{ fontSize: '16px' }}>
           {poll.topic}
         </Link>
       </Segment>
     ));
+
     return (
       <Container text style={{ marginTop: '5em' }}>
         <Header as="h1">VoteLi</Header>
