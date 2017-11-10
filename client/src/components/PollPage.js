@@ -9,6 +9,7 @@ import { Container, Icon, Message } from 'semantic-ui-react';
 import api from '../api';
 import isEmptyObject from '../utils/isEmptyObject';
 import { deletePoll } from '../actions/user';
+import PollPageFooter from './PollPageFooter';
 
 class PollPage extends React.Component {
   constructor(props) {
@@ -201,15 +202,14 @@ class PollPage extends React.Component {
               </form>
 
               <Doughnut data={data} />
-              {!loading &&
-                !error &&
-                !isEmptyObject(this.props.user) &&
-                ownUserPoll && (
-                  <button id={pollid} onClick={this.deletePoll}>
-                    Delete!
-                  </button>
-                )}
-              {!loading && !error && <button onClick={this.tweet}>Share On Twitter</button>}
+              <PollPageFooter
+                loading={loading}
+                error={error}
+                ownUserPoll={ownUserPoll}
+                deletePoll={this.deletePoll}
+                tweet={this.tweet}
+                pollid={pollid}
+              />
             </div>
           )}
       </Container>
