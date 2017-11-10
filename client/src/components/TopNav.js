@@ -1,13 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button, Container, Dropdown, Icon, Menu } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import isEmptyObject from '../utils/isEmptyObject';
 
-const TopNav = ({ user, history }) => {
-  const handleItemClick = (e, { name }) => history.push(`/${name}`);
+const TopNav = ({ user }) => {
   const logout = () => {
     window.location.href = '/auth/logout';
   };
@@ -26,13 +25,13 @@ const TopNav = ({ user, history }) => {
           </Menu.Item>
         ) : (
           <Menu.Menu position="right">
-            <Menu.Item name="mypolls" link onClick={handleItemClick}>
+            <Menu.Item name="mypolls" as={Link} to="/mypolls">
               My Polls
             </Menu.Item>
-            <Menu.Item name="newpoll" link onClick={handleItemClick}>
+            <Menu.Item name="newpoll" as={Link} to="/newpoll">
               New Poll
             </Menu.Item>
-            <Dropdown text={user.displayname} pointing className="link item">
+            <Dropdown text={user.displayname} pointing item>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
               </Dropdown.Menu>
@@ -47,9 +46,6 @@ const TopNav = ({ user, history }) => {
 TopNav.propTypes = {
   user: PropTypes.shape({
     displayname: PropTypes.string
-  }).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired
   }).isRequired
 };
 
@@ -59,6 +55,4 @@ function mapStateToProps(state) {
   };
 }
 
-// <Menu.Item>{user.displayname}</Menu.Item>
-// <Menu.Item href="/auth/logout">Logout</Menu.Item>
-export default withRouter(connect(mapStateToProps)(TopNav));
+export default connect(mapStateToProps)(TopNav);
