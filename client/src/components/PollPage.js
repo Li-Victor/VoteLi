@@ -4,7 +4,7 @@ import Validator from 'validator';
 import { Doughnut } from 'react-chartjs-2';
 import randomColor from 'randomcolor';
 import { connect } from 'react-redux';
-import { Container } from 'semantic-ui-react';
+import { Container, Icon, Message } from 'semantic-ui-react';
 
 import api from '../api';
 import isEmptyObject from '../utils/isEmptyObject';
@@ -147,11 +147,28 @@ class PollPage extends React.Component {
 
     return (
       <Container style={{ marginTop: '5em' }}>
-        {error && <h1>This poll does not exist</h1>}
-        {loading && !error && <p>Loading Poll Page for pollid: {pollid}...</p>}
+        {error && (
+          <Message negative>
+            <Message.Header>This poll does not exist.</Message.Header>
+            <a href="/">Go Back to HomePage.</a>
+          </Message>
+        )}
+
+        {loading &&
+          !error && (
+            <Message icon>
+              <Icon name="circle notched" loading />
+              <Message.Content>
+                <Message.Header>Just one second</Message.Header>
+                We are fetching Poll Page for pollid: {pollid} for you.
+              </Message.Content>
+            </Message>
+          )}
+
         {!loading &&
           !error && (
             <div>
+              <h2>{topic}</h2>
               <form onSubmit={this.handleSubmit}>
                 <label htmlFor="vote">
                   I&apos;d like to vote for ...
@@ -182,7 +199,7 @@ class PollPage extends React.Component {
 
                 <input type="submit" id="vote" value="Vote!" />
               </form>
-              <h2>{topic}</h2>
+
               <Doughnut data={data} />
               {!loading &&
                 !error &&
