@@ -27,10 +27,23 @@ Then the application will then be issued a consumer key and consumer secret.
   - SESSION_SECRET=*ANY RANDOM STRING OF CHARACTERS*
   - DATABASE_URL=*YOUR POSTGRES DATABASE URL*
   - REDIRECT_DOMAIN=*WEBSITE DOMAIN NAME*
-  - PORT=*ANY PORT NUMBER FOR EXPRESS*
+  - PORT=*ANY PORT NUMBER FOR EXPRESS, EXCLUDING 3000*
 - Make sure the new database with tables is running.
 - Run `npm run dev` or `yarn run dev`.
-- Navigate to `localhost:PORT_NUMBER` in your browser.
+- Navigate to `localhost:3000` in your browser.
+
+
+## Available Scripts
+
+In the project directory, the following commands are available:
+
+### `npm run dev` or `yarn run dev`
+
+Builds the app for development. It is watched by webpack for any changes in the front end (React) and back end (Express).
+
+### `npm run lint` or `yarn run lint`
+
+Lints both front end (React) and back end (Express).
 
 ## Libraries
 - Express.js
