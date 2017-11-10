@@ -233,7 +233,10 @@ class PollPage extends React.Component {
                 <Button
                   primary
                   type="submit"
-                  disabled={customOption && Validator.isEmpty(customValue)}
+                  disabled={
+                    Validator.isEmpty(selectValue) ||
+                    (customOption && Validator.isEmpty(customValue))
+                  }
                 >
                   Vote
                 </Button>
