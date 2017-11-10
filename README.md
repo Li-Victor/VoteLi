@@ -2,7 +2,7 @@
 
 VoteLi is a Node.js web application in which polls can be created, voted, and graphed.
 
-[**Check out VoteLi**](http://voteli.herokuapp.com/)
+[**Check out VoteLi**](https://voteli.herokuapp.com/)
 
 ## Getting Started
 
