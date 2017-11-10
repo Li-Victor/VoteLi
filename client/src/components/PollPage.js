@@ -42,7 +42,8 @@ class PollPage extends React.Component {
       customValue: '',
       ownUserPoll,
       openConfirm: false,
-      dimmerActive: false
+      dimmerActive: false,
+      votingError: ''
     };
   }
 
@@ -97,8 +98,8 @@ class PollPage extends React.Component {
 
     // error if select value is empty
     if (Validator.isEmpty(selectValue)) {
-      if (customOption) window.alert('Your custom voted cannot be empty');
-      else window.alert('You must choose which option to vote for.');
+      if (customOption) this.setState({ votingError: 'Your custom voted cannot be empty' });
+      else this.setState({ votingError: 'You must choose which option to vote for.' });
     } else {
       api.poll
         .vote(pollid, selectValue)
@@ -106,7 +107,7 @@ class PollPage extends React.Component {
           window.location.reload();
         })
         .catch((err) => {
-          window.alert(err.response.data);
+          this.setState({ votingError: err.response.data });
         });
     }
   };
@@ -142,12 +143,15 @@ class PollPage extends React.Component {
       selectValue,
       ownUserPoll,
       openConfirm,
-      dimmerActive
+      dimmerActive,
+      votingError
     } = this.state;
+
     const chartData = {
       labels: [],
       votes: []
     };
+
     const choices = pollInfo.map((choice) => {
       chartData.labels.push(choice.option);
       chartData.votes.push(choice.votes);
@@ -178,8 +182,8 @@ class PollPage extends React.Component {
           </Message>
         )}
 
-        {loading &&
-          !error && (
+        {!error &&
+          loading && (
             <Message icon>
               <Icon name="circle notched" loading />
               <Message.Content>
@@ -189,9 +193,16 @@ class PollPage extends React.Component {
             </Message>
           )}
 
-        {!loading &&
-          !error && (
+        {!error &&
+          !loading && (
             <div>
+              {/* Displaying any voting errors */}
+              {!Validator.isEmpty(votingError) && (
+                <Message negative>
+                  <Message.Header>{votingError}</Message.Header>
+                </Message>
+              )}
+
               <Confirm
                 open={openConfirm}
                 content="Are you sure you want to remove this poll?"
