@@ -4,7 +4,17 @@ import Validator from 'validator';
 import { Doughnut } from 'react-chartjs-2';
 import randomColor from 'randomcolor';
 import { connect } from 'react-redux';
-import { Confirm, Container, Dimmer, Icon, Loader, Message } from 'semantic-ui-react';
+import {
+  Button,
+  Confirm,
+  Container,
+  Dimmer,
+  Form,
+  Header,
+  Icon,
+  Loader,
+  Message
+} from 'semantic-ui-react';
 
 import api from '../api';
 import isEmptyObject from '../utils/isEmptyObject';
@@ -15,6 +25,7 @@ class PollPage extends React.Component {
   constructor(props) {
     super(props);
     const pollid = this.props.match.params.id;
+    // checks empty user props object and checks if match param id is in the user's polls
     const ownUserPoll =
       !isEmptyObject(this.props.user) &&
       this.props.user.polls.findIndex(poll => poll.pollid === Number(pollid)) !== -1;
@@ -190,25 +201,25 @@ class PollPage extends React.Component {
               <Dimmer active={dimmerActive} page>
                 <Loader size="massive">Deleting</Loader>
               </Dimmer>
-              <h2>{topic}</h2>
-              <form onSubmit={this.handleSubmit}>
-                <label htmlFor="vote">
-                  I&apos;d like to vote for ...
+
+              <Header as="h1">{topic}</Header>
+
+              <Form onSubmit={this.handleSubmit}>
+                <Form.Field inline>
+                  <label htmlFor="vote">I&apos;d like to vote for ...</label>
                   <select value={selectValue} onChange={this.handleChange}>
                     <option value="" disabled>
                       Choose an option....
                     </option>
                     {choices}
-                    {!isEmptyObject(this.props.user) && (
-                      <option value="custom">I&apos;d like a custom option</option>
-                    )}
+                    {ownUserPoll && <option value="custom">I&apos;d like a custom option</option>}
                   </select>
-                </label>
+                </Form.Field>
 
                 {customOption &&
-                  !isEmptyObject(this.props.user) && (
-                    <label htmlFor="customOption">
-                      Vote with my own option:
+                  ownUserPoll && (
+                    <Form.Field inline required>
+                      <label htmlFor="customOption">Vote with my own option:</label>
                       <input
                         type="text"
                         id="customOption"
@@ -216,11 +227,17 @@ class PollPage extends React.Component {
                         value={customValue}
                         onChange={this.changeCustomValue}
                       />
-                    </label>
+                    </Form.Field>
                   )}
 
-                <input type="submit" id="vote" value="Vote!" />
-              </form>
+                <Button
+                  primary
+                  type="submit"
+                  disabled={customOption && Validator.isEmpty(customValue)}
+                >
+                  Vote
+                </Button>
+              </Form>
 
               <Doughnut data={data} />
               <PollPageFooter
