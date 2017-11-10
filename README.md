@@ -14,7 +14,7 @@ VoteLi is a Node.js web application in which polls can be created, voted, and gr
 In order for the authorization component of this app to work, it needs to be registered with Twitter using [Twitter Application Management](https://apps.twitter.com/).
 
 The callback URL also needs to be provided in the format `DOMAIN/login/twitter/return`. <br>
-Example `http:127.0.0.1:5000/login/twitter/return`.
+Example: `http:127.0.0.1:5000/login/twitter/return`.
 
 Then the application will then be issued a consumer key and consumer secret.
 
@@ -45,11 +45,20 @@ Builds the app for development. It is watched by webpack for any changes in the 
 
 Lints both front end (React) and back end (Express).
 
+## User Stories
+- [x] As an authenticated user, I can keep my polls and come back later to access them.
+- [x] An as authenticated user, I can see the aggregate results of my polls.
+- [x] As an authenticated user, I can delete polls that I decide I don't want anymore.
+- [x] As an authenticated user, I can create a poll with any number of possible items.
+- [x] As an unauthenticated or authenticated user, I can see and vote on everyone's polls.
+- [x] As an unauthenticated or authenticated user, I can see the results of polls in chart form.
+- [x] As an authenticated user, if I don't like the options on a poll, I can create a new option.
+
 ## Libraries
 - Express.js
 - Massive
 - Passport Twitter
-- React
+- React using create-react-app
 - Redux
 - Redux Thunk
 - React Router v4
