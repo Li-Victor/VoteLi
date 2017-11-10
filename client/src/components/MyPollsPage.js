@@ -2,7 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Button, Confirm, Container, Header, Icon, Segment } from 'semantic-ui-react';
+import {
+  Button,
+  Confirm,
+  Container,
+  Dimmer,
+  Header,
+  Icon,
+  Loader,
+  Segment
+} from 'semantic-ui-react';
 
 import { deletePoll } from '../actions/user';
 
@@ -11,7 +20,8 @@ class MyPollsPage extends React.Component {
     super(props);
     this.state = {
       openConfirm: false,
-      pollid: undefined
+      pollid: undefined,
+      dimmerActive: false
     };
   }
 
@@ -21,7 +31,7 @@ class MyPollsPage extends React.Component {
 
   onConfirm = () => {
     const { pollid } = this.state;
-    this.setState({ openConfirm: false });
+    this.setState({ openConfirm: false, dimmerActive: true });
     if (!(pollid === undefined)) {
       this.props.dp(pollid).then(() => {
         window.location.reload();
@@ -57,10 +67,14 @@ class MyPollsPage extends React.Component {
       </Segment>
     ));
 
-    const { openConfirm } = this.state;
+    const { openConfirm, dimmerActive } = this.state;
 
     return (
       <Container text style={{ marginTop: '5em' }}>
+        <Dimmer active={dimmerActive} page>
+          <Loader size="massive">Deleting</Loader>
+        </Dimmer>
+
         <Header as="h1">VoteLi</Header>
         <Header as="h3" style={{ marginTop: 0 }}>
           <Header.Content>Below are polls you own.</Header.Content>
