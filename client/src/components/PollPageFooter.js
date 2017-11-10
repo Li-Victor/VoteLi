@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Icon } from 'semantic-ui-react';
 
-const PollPageFooter = ({ loading, error, ownUserPoll, deletePoll, tweet, pollid }) => {
+const PollPageFooter = ({ loading, error, ownUserPoll, removePoll, tweet, pollid }) => {
   const buttonStyle = {
     position: 'fixed',
     margin: '2em',
@@ -28,7 +28,7 @@ const PollPageFooter = ({ loading, error, ownUserPoll, deletePoll, tweet, pollid
       {!loading &&
         !error &&
         ownUserPoll && (
-          <Button id={pollid} negative icon onClick={deletePoll}>
+          <Button id={pollid} negative icon onClick={removePoll}>
             <Icon name="delete" /> Delete
           </Button>
         )}
@@ -46,7 +46,7 @@ PollPageFooter.propTypes = {
   loading: PropTypes.bool.isRequired,
   error: PropTypes.bool.isRequired,
   ownUserPoll: PropTypes.bool.isRequired,
-  deletePoll: PropTypes.func.isRequired,
+  removePoll: PropTypes.func.isRequired,
   tweet: PropTypes.func.isRequired,
   pollid: PropTypes.string.isRequired
 };

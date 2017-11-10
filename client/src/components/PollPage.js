@@ -4,7 +4,7 @@ import Validator from 'validator';
 import { Doughnut } from 'react-chartjs-2';
 import randomColor from 'randomcolor';
 import { connect } from 'react-redux';
-import { Container, Icon, Message } from 'semantic-ui-react';
+import { Confirm, Container, Dimmer, Icon, Loader, Message } from 'semantic-ui-react';
 
 import api from '../api';
 import isEmptyObject from '../utils/isEmptyObject';
@@ -29,7 +29,9 @@ class PollPage extends React.Component {
       colors: [],
       customOption: false,
       customValue: '',
-      ownUserPoll
+      ownUserPoll,
+      openConfirm: false,
+      dimmerActive: false
     };
   }
 
@@ -52,6 +54,18 @@ class PollPage extends React.Component {
         });
     }
   }
+
+  onCancel = () => {
+    this.setState({ openConfirm: false });
+  };
+
+  onConfirm = () => {
+    const { pollid } = this.state;
+    this.setState({ dimmerActive: true });
+    this.props.deletePoll(pollid).then(() => {
+      this.props.history.push('/mypolls');
+    });
+  };
 
   handleChange = (e) => {
     e.preventDefault();
@@ -92,14 +106,10 @@ class PollPage extends React.Component {
     });
   };
 
-  deletePoll = (e) => {
-    if (window.confirm('Are you sure you want to remove this poll?')) {
-      const pollid = e.target.id;
-
-      this.props.deletePoll(pollid).then(() => {
-        this.props.history.push('/mypolls');
-      });
-    }
+  removePoll = () => {
+    this.setState({
+      openConfirm: true
+    });
   };
 
   tweet = () => {
@@ -119,7 +129,9 @@ class PollPage extends React.Component {
       customOption,
       customValue,
       selectValue,
-      ownUserPoll
+      ownUserPoll,
+      openConfirm,
+      dimmerActive
     } = this.state;
     const chartData = {
       labels: [],
@@ -169,6 +181,15 @@ class PollPage extends React.Component {
         {!loading &&
           !error && (
             <div>
+              <Confirm
+                open={openConfirm}
+                content="Are you sure you want to remove this poll?"
+                onCancel={this.onCancel}
+                onConfirm={this.onConfirm}
+              />
+              <Dimmer active={dimmerActive} page>
+                <Loader size="massive">Deleting</Loader>
+              </Dimmer>
               <h2>{topic}</h2>
               <form onSubmit={this.handleSubmit}>
                 <label htmlFor="vote">
@@ -206,7 +227,7 @@ class PollPage extends React.Component {
                 loading={loading}
                 error={error}
                 ownUserPoll={ownUserPoll}
-                deletePoll={this.deletePoll}
+                removePoll={this.removePoll}
                 tweet={this.tweet}
                 pollid={pollid}
               />
